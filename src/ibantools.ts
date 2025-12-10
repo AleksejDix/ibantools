@@ -265,8 +265,8 @@ export function composeIBAN(params: ComposeIBANParams): string | null {
     spec.bban_regexp !== null &&
     checkFormatBBAN(formated_bban, spec.bban_regexp)
   ) {
-    const checksom = mod9710Iban(params.countryCode + '00' + formated_bban);
-    return params.countryCode + ('0' + (98 - checksom)).slice(-2) + formated_bban;
+    const checksom = mod9710Iban(`${params.countryCode}00${formated_bban}`);
+    return `${params.countryCode}${`0${98 - checksom}`.slice(-2)}${formated_bban}`;
   }
   return null;
 }
@@ -375,7 +375,7 @@ export function friendlyFormatIBAN(iban?: string | null, separator?: string): st
   if (electronic_iban === null) {
     return null;
   }
-  return electronic_iban.replace(/(.{4})(?!$)/g, '$1' + separator);
+  return electronic_iban.replace(/(.{4})(?!$)/g, `$1${separator}`);
 }
 
 /**
