@@ -11,7 +11,6 @@ npm-debug.log
 .log
 test.lcov
 CLAUDE.md
-registry/
 plans/
 dist/
 docs/

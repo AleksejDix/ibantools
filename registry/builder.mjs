@@ -1,0 +1,218 @@
+#!/usr/bin/env node
+/**
+ * IBAN Registry Builder
+ *
+ * Parses SWIFT IBAN Registry TXT file and generates iban_spec.js
+ *
+ * Usage:
+ *   node registry/builder.mjs [--output path]
+ *
+ * Options:
+ *   --output path   Output file path (default: script/iban_spec.js)
+ */
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Parse command line arguments
+const args = process.argv.slice(2);
+let outputPath = path.join(__dirname, '..', 'script', 'iban_spec.js');
+
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--output' && args[i + 1]) {
+    outputPath = args[i + 1];
+    i++;
+  }
+}
+
+/**
+ * Convert BBAN structure notation to regex
+ * e.g., "4!n4!n12!c" -> "^[0-9]{4}[0-9]{4}[A-Z0-9]{12}$"
+ */
+function structureToRegex(structure) {
+  const matches = structure.match(/(\d+)!(.)/g) || [];
+  const regex =
+    '^' +
+    matches
+      .map((m) => {
+        const match = m.match(/(\d+)!(.)/);
+        if (!match) return '';
+        const [, amount, type] = match;
+        let range = '[A-Z0-9]';
+        if (type === 'n') range = '[0-9]';
+        else if (type === 'a') range = '[A-Z]';
+        return `${range}{${amount}}`;
+      })
+      .join('') +
+    '$';
+  return regex;
+}
+
+/**
+ * Find the latest iban-registry-vXXX.txt file in the registry folder
+ */
+function findLatestRegistry() {
+  const files = fs.readdirSync(__dirname);
+  const registryFiles = files
+    .filter((f) => /^iban-registry-v\d+\.txt$/.test(f))
+    .sort((a, b) => {
+      const versionA = parseInt(a.match(/v(\d+)/)[1], 10);
+      const versionB = parseInt(b.match(/v(\d+)/)[1], 10);
+      return versionB - versionA; // Descending order (latest first)
+    });
+
+  if (registryFiles.length === 0) {
+    throw new Error('No iban-registry-vXXX.txt file found in registry folder');
+  }
+
+  return path.join(__dirname, registryFiles[0]);
+}
+
+/**
+ * Parse SWIFT TXT registry file
+ */
+function parseRegistry() {
+  const txtPath = findLatestRegistry();
+  console.log(`Using: ${path.basename(txtPath)}`);
+
+  const rawContent = fs.readFileSync(txtPath, 'latin1');
+
+  // Join lines that are continuations (handle quoted multi-line values)
+  const lines = [];
+  let currentLine = '';
+
+  for (const line of rawContent.split('\n')) {
+    if (line.startsWith('"\t') && currentLine) {
+      currentLine += line.slice(1);
+    } else {
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+      currentLine = line;
+    }
+  }
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  const result = [];
+
+  lines.forEach((line) => {
+    const data = line.split('\t').map((e) => e.trim().replace(/^"|"$/g, ''));
+    const key = data[0];
+    const values = data.slice(1);
+
+    if (key === 'Name of country') {
+      values.forEach((el, i) => {
+        result[i] = { country_name: el };
+      });
+    }
+    if (key === 'IBAN prefix country code (ISO 3166)') {
+      values.forEach((el, i) => {
+        if (result[i]) result[i].code = el;
+      });
+    }
+    if (key === 'SEPA country') {
+      values.forEach((el, i) => {
+        if (result[i]) result[i].sepa = el === 'Yes';
+      });
+    }
+    if (key === 'IBAN length') {
+      values.forEach((el, i) => {
+        if (result[i]) result[i].length = parseInt(el, 10);
+      });
+    }
+    if (key === 'BBAN structure') {
+      values.forEach((el, i) => {
+        if (result[i]) {
+          result[i].bban_regexp = structureToRegex(el);
+        }
+      });
+    }
+    if (key === 'Bank identifier position within the BBAN') {
+      values.forEach((el, i) => {
+        if (result[i] && el !== 'N/A' && el !== '') {
+          const parts = el.split('-').map((n) => parseInt(n, 10) - 1);
+          result[i].bank_identifier = parts.join('-');
+        }
+      });
+    }
+    if (key === 'Branch identifier position within the BBAN') {
+      values.forEach((el, i) => {
+        if (result[i] && el !== 'N/A' && el !== '') {
+          const parts = el.split('-').map((n) => parseInt(n, 10) - 1);
+          result[i].branch_indentifier = parts.join('-');
+        }
+      });
+    }
+    if (key === 'IBAN electronic format example') {
+      values.forEach((el, i) => {
+        if (result[i]) result[i].iban_example = el;
+      });
+    }
+    if (key === 'Domestic account number example') {
+      values.forEach((el, i) => {
+        if (result[i]) result[i].account_example = el.replace(/ /g, '');
+      });
+    }
+  });
+
+  // Find account position from domestic account example
+  result.forEach((spec) => {
+    if (spec.iban_example && spec.account_example) {
+      const pos = spec.iban_example.indexOf(spec.account_example);
+      if (pos !== -1) {
+        spec.account_indentifier = `${pos}-${pos + spec.account_example.length}`;
+      }
+    }
+  });
+
+  return result.filter((s) => s.code).sort((a, b) => a.code.localeCompare(b.code));
+}
+
+/**
+ * Generate iban_spec.js content
+ */
+function generateOutput(specs) {
+  let output = '/*!\n';
+  output += ' * @license\n';
+  output += ' * This Source Code Form is subject to the terms of the Mozilla Public\n';
+  output += ' * License, v. 2.0. If a copy of the MPL was not distributed with this\n';
+  output += ' * file, You can obtain one at http://mozilla.org/MPL/2.0/. */\n\n';
+  output += 'export const autogeneratedCountrySpecs = {\n';
+
+  specs.forEach((spec) => {
+    output += `  ${spec.code}: {\n`;
+    output += `    chars: ${spec.length},\n`;
+    output += `    bban_regexp: '${spec.bban_regexp}',\n`;
+    output += `    IBANRegistry: true,\n`;
+    output += `    SEPA: ${spec.sepa},\n`;
+    if (spec.branch_indentifier) {
+      output += `    branch_indentifier: '${spec.branch_indentifier}',\n`;
+    }
+    if (spec.bank_identifier) {
+      output += `    bank_identifier: '${spec.bank_identifier}',\n`;
+    }
+    if (spec.account_indentifier) {
+      output += `    account_indentifier: '${spec.account_indentifier}',\n`;
+    }
+    output += '  },\n';
+  });
+
+  output += '};\n';
+  return output;
+}
+
+// Main
+console.log('IBAN Registry Builder');
+console.log('');
+
+const specs = parseRegistry();
+console.log(`Parsed ${specs.length} countries from iban-registry-v101.txt`);
+
+const output = generateOutput(specs);
+fs.writeFileSync(outputPath, output);
+console.log(`Generated ${outputPath}`);
