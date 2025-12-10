@@ -3,7 +3,6 @@
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![License](https://img.shields.io/badge/License-MPL_2.0-blue)
 
-![Bower version](https://badge.fury.io/bo/ibantools.svg)
 [![npm version](https://badge.fury.io/js/ibantools.svg)](https://badge.fury.io/js/ibantools)
 [![NPM downloads](https://img.shields.io/npm/dw/ibantools)](https://www.npmjs.com/package/ibantools)
 ![Dependents (via libraries.io)](https://img.shields.io/librariesio/dependents/npm/ibantools)
@@ -31,72 +30,60 @@ For more information about IBAN/BBAN see [wikipedia page](https://en.wikipedia.o
 
 For more information about BIC/SWIFT see [this wikipedia page](https://en.wikipedia.org/wiki/ISO_9362).
 
+## Requirements
+
+- Node.js `^20.19.0 || >=22.12.0`
+
 ## Installation
 
-### Node (Common JS ES5 and ES6)
-
-```
-$ npm install ibantools
-```
-
-### Bower (AMD ES5)
-
-```
-$ bower install ibantools
+```bash
+npm install ibantools
 ```
 
 ## Usage
 
 See [full documentation](http://simplify.github.io/ibantools) with examples on Github pages.
 
-### Node.js - CommonJS
+### ES Modules (Recommended)
 
 ```js
-const ibantools = require('ibantools');
+import { isValidIBAN, validateIBAN, isValidBIC, electronicFormatIBAN } from 'ibantools';
+
 const iban = electronicFormatIBAN('NL91 ABNA 0417 1643 00'); // 'NL91ABNA0517164300'
-ibantools.isValidIBAN(iban);
+isValidIBAN(iban); // true
 
 // If you want to know reason why IBAN is invalid
-ibantools.validateIBAN('NL91ABNA0517164300');
-// Returns { valid: false, errorCodes: [iban.ValidationErrorsIBAN.WrongIBANChecksum] }
+validateIBAN('NL91ABNA0517164300');
+// Returns { valid: false, errorCodes: [ValidationErrorsIBAN.WrongIBANChecksum] }
 
 // Validate BIC
-ibantools.isValidBIC('ABNANL2A');
+isValidBIC('ABNANL2A'); // true
 ```
 
-### AMD - RequireJS - Browser
+### TypeScript
 
-```js
-require(["ibantools"], function(ibantools) {
-  console.log(ibantools.isValidIBAN('NL91 ABNA 0417 1643 00'));
-  console.log(ibantools.isValidBIC('ABNANL2A'));
-});
+Full TypeScript support with bundled type definitions:
+
+```typescript
+import { isValidIBAN, validateIBAN, ValidationErrorsIBAN } from 'ibantools';
+
+const result = validateIBAN('NL91ABNA0417164300');
+if (!result.valid) {
+  console.log('Invalid IBAN:', result.errorCodes);
+}
 ```
-
-### Node.js - Common JS in browser
-
-Use browserify or webpack.
-
-### jsnext:main
-
-Use node, not bower module.
-
-If you are using tools that support `jsnext`, like a [rollup](https://github.com/rollup/rollup) or [JSPM](http://jspm.io/), they will automatically select right module from the package.
-
-### With TypeScript
-
-Install library/module using npm. Package bundles type definitions and if you are on TypeScript 2.0 or above `tsc` will access those automatically. If not, check your `tsconfig.json` file.
 
 ### Extension
 
 Country specifications can be extended with national BBAN validations by calling `setCountryBBANValidation`.
 
-For example, to fully syntactically check German IBAN, you can install [IBANTools-Germany](https://github.com/baumerdev/ibantools-germany) and add this with
+For example, to fully syntactically check German IBAN, you can install [IBANTools-Germany](https://github.com/baumerdev/ibantools-germany):
 
-```
-const ibantools = require('ibantools');
-const ibantoolsGermany = require("ibantools-germany");
-ibantools.setCountryBBANValidation("DE", ibantoolsGermany.isValidBBAN);
+```js
+import { setCountryBBANValidation } from 'ibantools';
+import { isValidBBAN } from 'ibantools-germany';
+
+setCountryBBANValidation('DE', isValidBBAN);
 ```
 
 ## Contributing

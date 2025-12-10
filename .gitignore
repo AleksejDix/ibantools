@@ -10,7 +10,6 @@ dist
 npm-debug.log
 .log
 test.lcov
-CLAUDE.md
 plans/
 dist/
 docs/
