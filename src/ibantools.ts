@@ -899,15 +899,14 @@ const checkHungarianBBAN = (bban: string): boolean => {
     }
     const remainder = sum % 10;
     return controlDigitAccount === (remainder === 0 ? 0 : 10 - remainder);
-  } else {
-    const toCheckAccount = bban.substring(8, 23);
-    const controlDigitAccount = parseInt(bban.charAt(23), 10);
-    for (let index = 0; index < toCheckAccount.length; index++) {
-      sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index];
-    }
-    const remainder = sum % 10;
-    return controlDigitAccount === (remainder === 0 ? 0 : 10 - remainder);
   }
+  const toCheckAccount = bban.substring(8, 23);
+  const controlDigitAccount = parseInt(bban.charAt(23), 10);
+  for (let index = 0; index < toCheckAccount.length; index++) {
+    sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index];
+  }
+  const accountRemainder = sum % 10;
+  return controlDigitAccount === (accountRemainder === 0 ? 0 : 10 - accountRemainder);
 };
 
 /**
