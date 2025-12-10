@@ -134,7 +134,7 @@ export function validateIBAN(
       result.valid = false;
       result.errorCodes.push(ValidationErrorsIBAN.ChecksumNotNumber);
     }
-    if (result.errorCodes.indexOf(ValidationErrorsIBAN.WrongBBANFormat) !== -1 || !isValidIBANChecksum(iban)) {
+    if (result.errorCodes.includes(ValidationErrorsIBAN.WrongBBANFormat) || !isValidIBANChecksum(iban)) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsIBAN.WrongIBANChecksum);
     }

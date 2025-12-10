@@ -20,7 +20,6 @@
     "prefer-enum-initializers": "off",
     "radix": "off",
     "max-lines-per-function": "off",
-    "max-lines": "off",
-    "prefer-includes": "off"
+    "max-lines": "off"
   }
 }
