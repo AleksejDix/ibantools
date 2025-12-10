@@ -153,21 +153,6 @@ function parseRegistry() {
         if (result[i]) result[i].iban_example = el;
       });
     }
-    if (key === 'Domestic account number example') {
-      values.forEach((el, i) => {
-        if (result[i]) result[i].account_example = el.replace(/ /g, '');
-      });
-    }
-  });
-
-  // Find account position from domestic account example
-  result.forEach((spec) => {
-    if (spec.iban_example && spec.account_example) {
-      const pos = spec.iban_example.indexOf(spec.account_example);
-      if (pos !== -1) {
-        spec.account_indentifier = `${pos}-${pos + spec.account_example.length}`;
-      }
-    }
   });
 
   return result.filter((s) => s.code).sort((a, b) => a.code.localeCompare(b.code));
@@ -195,9 +180,6 @@ function generateOutput(specs) {
     }
     if (spec.bank_identifier) {
       output += `    bank_identifier: '${spec.bank_identifier}',\n`;
-    }
-    if (spec.account_indentifier) {
-      output += `    account_indentifier: '${spec.account_indentifier}',\n`;
     }
     output += '  },\n';
   });

@@ -859,6 +859,28 @@ describe('IBANTools', () => {
     });
   });
 
+  describe('When calling extractIBAN() with valid Jordan IBAN', () => {
+    const ext = iban.extractIBAN('JO94CBJO0010000000000131000302');
+    it('valid should be true', () => {
+      expect(ext.valid).toBe(true);
+    });
+    it('IBAN should be JO94CBJO0010000000000131000302', () => {
+      expect(ext.iban).toBe('JO94CBJO0010000000000131000302');
+    });
+    it('BBAN should be CBJO0010000000000131000302', () => {
+      expect(ext.bban).toBe('CBJO0010000000000131000302');
+    });
+    it('countryCode should be JO', () => {
+      expect(ext.countryCode).toBe('JO');
+    });
+    it('bankIdentifier should be CBJO', () => {
+      expect(ext.bankIdentifier).toBe('CBJO');
+    });
+    it('branchIdentifier should be 0010', () => {
+      expect(ext.branchIdentifier).toBe('0010');
+    });
+  });
+
   describe('When calling extractIBAN() with dash separated IBAN', () => {
     const ext = iban.extractIBAN('NL91-ABNA-0417-1643-00');
 
