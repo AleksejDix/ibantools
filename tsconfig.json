@@ -5,6 +5,7 @@
     "moduleResolution": "bundler",
     "strict": true,
     "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
     "declaration": true,
     "noImplicitAny": true,
     "removeComments": true,
