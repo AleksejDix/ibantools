@@ -20,6 +20,12 @@
 'use strict';
 
 /**
+ * ISO 7064 MOD-97-10 checksum constants
+ */
+const MOD_97 = 97;
+const MOD_97_REMAINDER = 98;
+
+/**
  * Interface for validation options
  */
 export interface ValidateIBANOptions {
@@ -267,7 +273,7 @@ export function composeIBAN(params: ComposeIBANParams): string | null {
     checkFormatBBAN(formated_bban, spec.bban_regexp)
   ) {
     const checksom = mod9710Iban(`${params.countryCode}00${formated_bban}`);
-    return `${params.countryCode}${`0${98 - checksom}`.slice(-2)}${formated_bban}`;
+    return `${params.countryCode}${`0${MOD_97_REMAINDER - checksom}`.slice(-2)}${formated_bban}`;
   }
   return null;
 }
@@ -409,7 +415,7 @@ function isValidIBANChecksum(iban: string): boolean {
 
   const validationString = replaceCharaterWithCode(`${bban}${countryCode}00`);
   const rest = mod9710(validationString);
-  return 98 - rest === providedChecksum;
+  return MOD_97_REMAINDER - rest === providedChecksum;
 }
 
 /**
@@ -652,7 +658,7 @@ const checkBelgianBBAN = (bban: string): boolean => {
   const stripped = bban.replace(/[\s.]+/g, '');
   const checkingPart = parseInt(stripped.substring(0, stripped.length - 2), 10);
   const checksum = parseInt(stripped.substring(stripped.length - 2, stripped.length), 10);
-  const remainder = checkingPart % 97 === 0 ? 97 : checkingPart % 97;
+  const remainder = checkingPart % MOD_97 === 0 ? MOD_97 : checkingPart % MOD_97;
   return remainder === checksum;
 };
 
@@ -673,9 +679,9 @@ const mod9710 = (validationString: string): number => {
     if (isNaN(partInt)) {
       return NaN;
     }
-    validationString = (partInt % 97) + validationString.slice(part.length);
+    validationString = (partInt % MOD_97) + validationString.slice(part.length);
   }
-  return parseInt(validationString, 10) % 97;
+  return parseInt(validationString, 10) % MOD_97;
 };
 
 /**
