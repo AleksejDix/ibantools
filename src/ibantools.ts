@@ -337,7 +337,7 @@ export function electronicFormatIBAN(iban?: string): string | null {
   if (typeof iban !== 'string') {
     return null;
   }
-  return iban.replace(/[-\ ]/g, '').toUpperCase();
+  return iban.replace(/[- ]/g, '').toUpperCase();
 }
 
 /**
