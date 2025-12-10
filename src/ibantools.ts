@@ -564,7 +564,7 @@ export function extractBIC(inputBic: string): ExtractBICResult {
     result.bankCode = bic.slice(0, 4);
     result.countryCode = bic.slice(4, 6);
     result.locationCode = bic.slice(6, 8);
-    result.testBIC = result.locationCode[1] === '0' ? true : false;
+    result.testBIC = result.locationCode[1] === '0';
     result.branchCode = bic.length > 8 ? bic.slice(8) : null;
     result.valid = true;
   } else {
