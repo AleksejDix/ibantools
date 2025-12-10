@@ -1,3 +1,13 @@
+2025-12-10  Build System Modernization
+	* Replaced TypeScript CLI build with Vite 7.2.7 (ESM only output)
+	* Replaced Mocha/Chai/c8 with Vitest 4.0.15
+	* Replaced ESLint with oxlint 1.32.0 (type-aware linting)
+	* Updated TypeScript to 5.9.3
+	* Updated typedoc to 0.28.4
+	* Removed bower.json (Bower support dropped)
+	* Removed AMD/CommonJS output (ESM only)
+	* Added dist/ to .gitignore
+
 2024-04-13  Saša Jovanić <sasa@simplify.ba>
         * Upgraded several npm packages
         * Moved to new ts compiler targets
