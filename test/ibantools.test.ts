@@ -198,6 +198,9 @@ describe('IBANTools', () => {
     it('with valid Somalian IBAN should return true', () => {
       expect(iban.isValidIBAN('SO061000001123123456789')).toBe(true);
     });
+    it('with valid Yemen IBAN should return true', () => {
+      expect(iban.isValidIBAN('YE15CBYE0001018861234567891234')).toBe(true);
+    });
     it('with valid Poland IBAN should return true', () => {
       expect(iban.isValidIBAN('PL10105000997603123456789123')).toBe(true);
     });
@@ -806,6 +809,53 @@ describe('IBANTools', () => {
     });
     it('branchIdentifier should be 1500', () => {
       expect(ext.branchIdentifier).toBe('1500');
+    });
+  });
+
+  describe('When calling extractIBAN() with valid Yemen IBAN', () => {
+    const ext = iban.extractIBAN('YE15CBYE0001018861234567891234');
+    it('valid should be true', () => {
+      expect(ext.valid).toBe(true);
+    });
+    it('IBAN should be YE15CBYE0001018861234567891234', () => {
+      expect(ext.iban).toBe('YE15CBYE0001018861234567891234');
+    });
+    it('BBAN should be CBYE0001018861234567891234', () => {
+      expect(ext.bban).toBe('CBYE0001018861234567891234');
+    });
+    it('countryCode should be YE', () => {
+      expect(ext.countryCode).toBe('YE');
+    });
+    it('accountNumber should be 018861234567891234', () => {
+      expect(ext.accountNumber).toBe('018861234567891234');
+    });
+    it('bankIdentifier should be CBYE', () => {
+      expect(ext.bankIdentifier).toBe('CBYE');
+    });
+    it('branchIdentifier should be 0001', () => {
+      expect(ext.branchIdentifier).toBe('0001');
+    });
+  });
+
+  describe('When calling extractIBAN() with valid Honduras IBAN', () => {
+    const ext = iban.extractIBAN('HN54PISA00000000000000123124');
+    it('valid should be true', () => {
+      expect(ext.valid).toBe(true);
+    });
+    it('IBAN should be HN54PISA00000000000000123124', () => {
+      expect(ext.iban).toBe('HN54PISA00000000000000123124');
+    });
+    it('BBAN should be PISA00000000000000123124', () => {
+      expect(ext.bban).toBe('PISA00000000000000123124');
+    });
+    it('countryCode should be HN', () => {
+      expect(ext.countryCode).toBe('HN');
+    });
+    it('accountNumber should be 00000000000000123124', () => {
+      expect(ext.accountNumber).toBe('00000000000000123124');
+    });
+    it('bankIdentifier should be PISA', () => {
+      expect(ext.bankIdentifier).toBe('PISA');
     });
   });
 

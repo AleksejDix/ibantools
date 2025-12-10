@@ -1299,6 +1299,9 @@ export const countrySpecs: CountryMapInternal = {
   HN: {
     chars: 28,
     bban_regexp: '^[A-Z]{4}[0-9]{20}$',
+    IBANRegistry: true,
+    bank_identifier: '0-3',
+    account_indentifier: '8-28',
   },
   HR: {
     chars: 21,
@@ -1843,7 +1846,14 @@ export const countrySpecs: CountryMapInternal = {
     branch_indentifier: '2-3',
     account_indentifier: '4-20',
   },
-  YE: {},
+  YE: {
+    chars: 30,
+    bban_regexp: '^[A-Z]{4}[0-9]{4}[A-Z0-9]{18}$',
+    IBANRegistry: true,
+    branch_indentifier: '4-7',
+    bank_identifier: '0-3',
+    account_indentifier: '12-30',
+  },
   YT: {
     chars: 27,
     bban_regexp: '^[0-9]{10}[A-Z0-9]{11}[0-9]{2}$',
