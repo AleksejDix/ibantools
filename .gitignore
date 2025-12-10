@@ -6,8 +6,10 @@ node_modules
 coverage
 .nyc_output
 ghpages
-jsnext
-build
+dist
 npm-debug.log
 .log
 test.lcov
+CLAUDE.md
+registry/
+plans/

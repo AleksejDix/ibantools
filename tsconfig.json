@@ -1,33 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "strict": true,
-    "module": "amd",
     "declaration": true,
     "noImplicitAny": true,
     "removeComments": true,
-    "experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-    "rootDir": ".",
     "sourceMap": true,
-    "listFiles": true,
     "newLine": "LF",
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "outDir": "./dist"
   },
-  "filesGlob": [
-    "./**/*.ts",
-    "./**/*.tsx",
-    "!./**/*.d.ts",
-    "!./gulpfile.ts",
-    "!./node_modules/**/*.ts",
-    "./node_modules/typescript/lib/lib.es6.d.ts"
-  ],
-  "exclude": [],
-  "files": [
-    "./src/ibantools.ts"
-  ],
-  "types": [],
-  "typedocOptions": {
-    "name": "IBANTools"
-  }
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "test"]
 }

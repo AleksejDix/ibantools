@@ -13,40 +13,34 @@
   "sideEffects": false,
   "homepage": "https://github.com/Simplify/ibantools",
   "bugs": "https://github.com/Simplify/ibantools/issues",
-  "main": "jsnext/ibantools.js",
   "type": "module",
-  "module": "jsnext/ibantools.js",
-  "jspm": {
-    "main": "jsnext/ibantools.js",
-    "format": "esm"
+  "main": "./dist/ibantools.js",
+  "module": "./dist/ibantools.js",
+  "types": "./dist/ibantools.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/ibantools.d.ts",
+      "import": "./dist/ibantools.js"
+    }
   },
   "files": [
-    "build",
-    "jsnext",
-    "LICENSE",
-    "typings.json"
+    "dist",
+    "LICENSE"
   ],
   "directories": {
     "doc": "docs"
-  },
-  "types": "build/ibantools.d.ts",
-  "typescript": {
-    "definition": "build/ibantools.d.ts"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Simplify/ibantools.git"
   },
   "scripts": {
-    "build": "npm run build-node && npm run build-bower && npm run build-module",
-    "build-node": "rm -rf build && npx tsc src/*.ts --declaration --target es2017 --module commonjs --outDir ./build/",
-    "build-bower": "rm -rf dist && npx tsc src/*.ts --declaration --target es2017 --module amd --outDir ./dist/",
-    "build-module": "rm -rf jsnext && npx tsc src/*.ts --target es2017 --module es2020 --outDir ./jsnext/",
+    "build": "vite build",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
-    "prepare": "npm run build-node",
+    "prepare": "npm run build",
     "docs": "typedoc src/ibantools.ts",
     "all": "npm run test && npm run lint && npm run docs"
   },
@@ -59,18 +53,15 @@
     "@typescript-eslint/eslint-plugin": "^7.6",
     "@typescript-eslint/parser": "^7.6",
     "@vitest/coverage-v8": "^4.0.15",
-    "coveralls-next": "^4.2.0",
     "docdash": "^2.0.0",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.3",
-    "requirejs": "^2.3.6",
     "typedoc": "^0.27.2",
     "typescript": "^5.2",
+    "vite": "7.2.7",
+    "vite-plugin-dts": "4.5.4",
     "vitest": "^4.0.15"
-  },
-  "resolutions": {
-    "source-map": "^0.8.0-beta.0"
   }
 }
