@@ -5,8 +5,15 @@
     "suspicious": "warn",
     "pedantic": "off",
     "perf": "warn",
-    "style": "off"
+    "style": "warn"
   },
   "plugins": ["typescript"],
-  "rules": {}
+  "rules": {
+    "no-magic-numbers": "off",
+    "sort-keys": "off",
+    "func-style": "off",
+    "no-ternary": "off",
+    "id-length": "off",
+    "guard-for-in": "off"
+  }
 }
