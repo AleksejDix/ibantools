@@ -292,9 +292,11 @@ export interface ExtractIBANResult {
  * ```
  */
 export function extractIBAN(iban: string): ExtractIBANResult {
-  const result = {} as ExtractIBANResult;
   const eFormatIBAN: string | null = electronicFormatIBAN(iban);
-  result.iban = eFormatIBAN || iban;
+  const result: ExtractIBANResult = {
+    iban: eFormatIBAN || iban,
+    valid: false,
+  };
   if (!!eFormatIBAN && isValidIBAN(eFormatIBAN)) {
     result.bban = eFormatIBAN.slice(4);
     result.countryCode = eFormatIBAN.slice(0, 2);
@@ -318,8 +320,6 @@ export function extractIBAN(iban: string): ExtractIBANResult {
       const ending = parseInt(ac[1]);
       result.branchIdentifier = result.bban.slice(starting, ending + 1);
     }
-  } else {
-    result.valid = false;
   }
   return result;
 }
