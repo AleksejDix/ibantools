@@ -45,7 +45,7 @@ export interface ValidateIBANOptions {
  * ibantools.isValidIBAN('CH4431999123000889012', { allowQRIBAN: false });
  * ```
  */
-export function isValidIBAN(iban: string, validationOptions: ValidateIBANOptions = { allowQRIBAN: true }): boolean {
+export function isValidIBAN(iban: string | null | undefined, validationOptions: ValidateIBANOptions = { allowQRIBAN: true }): boolean {
   if (iban === undefined || iban === null) return false;
 
   const reg = new RegExp('^[0-9]{2}$', '');
@@ -103,7 +103,7 @@ export interface ValidateIBANResult {
  * ```
  */
 export function validateIBAN(
-  iban?: string,
+  iban?: string | null,
   validationOptions: ValidateIBANOptions = { allowQRIBAN: true },
 ): ValidateIBANResult {
   const result = { errorCodes: [], valid: true } as ValidateIBANResult;
@@ -158,7 +158,7 @@ export function validateIBAN(
  * ibantools.isValidBBAN("A7NA0517164300", "NL");
  * ```
  */
-export function isValidBBAN(bban?: string, countryCode?: string): boolean {
+export function isValidBBAN(bban?: string | null, countryCode?: string | null): boolean {
   if (bban === undefined || bban === null || countryCode === undefined || countryCode === null) return false;
 
   const spec = countrySpecs[countryCode];
@@ -227,8 +227,8 @@ export function isQRIBAN(iban: string): boolean {
  * Interface for ComposeIBAN parameteres
  */
 export interface ComposeIBANParams {
-  countryCode?: string;
-  bban?: string;
+  countryCode?: string | null;
+  bban?: string | null;
 }
 
 /**
@@ -240,7 +240,7 @@ export interface ComposeIBANParams {
  * ```
  */
 export function composeIBAN(params: ComposeIBANParams): string | null {
-  const formated_bban: string = electronicFormatIBAN(params.bban) || '';
+  const formated_bban: string = electronicFormatIBAN(params.bban ?? undefined) || '';
   if (params.countryCode === null || params.countryCode === undefined) {
     return null;
   }
@@ -353,7 +353,7 @@ export function electronicFormatIBAN(iban?: string): string | null {
  * ibantools.friendlyFormatIBAN("NL91ABNA0417164300","-");
  * ```
  */
-export function friendlyFormatIBAN(iban?: string, separator?: string): string | null {
+export function friendlyFormatIBAN(iban?: string | null, separator?: string): string | null {
   if (typeof iban !== 'string') {
     return null;
   }
@@ -482,7 +482,7 @@ export function getCountrySpecifications(): CountryMap {
  * ibantools.isValidBIC("ABNA NL 2A");
  * ```
  */
-export function isValidBIC(bic: string): boolean {
+export function isValidBIC(bic: string | null | undefined): boolean {
   if (!bic) {
     return false;
   }
@@ -515,7 +515,7 @@ export interface ValidateBICResult {
  * ibantools.validateBIC("NEDSZAJJXXX");
  * ```
  */
-export function validateBIC(bic?: string): ValidateBICResult {
+export function validateBIC(bic?: string | null): ValidateBICResult {
   const result = { errorCodes: [], valid: true } as ValidateBICResult;
   if (bic !== undefined && bic !== null && bic !== '') {
     const spec = countrySpecs[bic.toUpperCase().slice(4, 6)];
