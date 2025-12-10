@@ -614,6 +614,20 @@ interface CountryMapInternal {
 }
 
 /**
+ * Calculate MOD 11 check digit
+ * @ignore
+ */
+const mod11CheckDigit = (remainder: number): number => {
+  if (remainder === 0) {
+    return 0;
+  }
+  if (remainder === 1) {
+    return 1;
+  }
+  return 11 - remainder;
+};
+
+/**
  * Used for Norway BBAN check
  *
  * @ignore
@@ -712,7 +726,7 @@ const checkSpainBBAN = (bban: string): boolean => {
     sum += parseInt(bankBranch.charAt(index), 10) * weightsBankBranch[index];
   }
   let remainder = sum % 11;
-  if (controlBankBranch !== (remainder === 0 ? 0 : remainder === 1 ? 1 : 11 - remainder)) {
+  if (controlBankBranch !== (mod11CheckDigit(remainder))) {
     return false;
   }
   sum = 0;
@@ -720,7 +734,7 @@ const checkSpainBBAN = (bban: string): boolean => {
     sum += parseInt(account.charAt(index), 10) * weightsAccount[index];
   }
   remainder = sum % 11;
-  return controlAccount === (remainder === 0 ? 0 : remainder === 1 ? 1 : 11 - remainder);
+  return controlAccount === (mod11CheckDigit(remainder));
 };
 
 /**
@@ -771,7 +785,7 @@ const checkCzechAndSlovakBBAN = (bban: string): boolean => {
     sum += parseInt(prefix.charAt(index), 10) * weightsPrefix[index];
   }
   let remainder = sum % 11;
-  if (controlPrefix !== (remainder === 0 ? 0 : remainder === 1 ? 1 : 11 - remainder)) {
+  if (controlPrefix !== (mod11CheckDigit(remainder))) {
     return false;
   }
   sum = 0;
@@ -779,7 +793,7 @@ const checkCzechAndSlovakBBAN = (bban: string): boolean => {
     sum += parseInt(suffix.charAt(index), 10) * weightsSuffix[index];
   }
   remainder = sum % 11;
-  return controlSuffix === (remainder === 0 ? 0 : remainder === 1 ? 1 : 11 - remainder);
+  return controlSuffix === (mod11CheckDigit(remainder));
 };
 
 /**
