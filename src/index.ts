@@ -19,11 +19,7 @@
  */
 'use strict';
 
-/**
- * ISO 7064 MOD-97-10 checksum constants
- */
-const MOD_97 = 97;
-const MOD_97_REMAINDER = 98;
+import { MOD_97, MOD_97_REMAINDER } from './core/constants';
 
 /**
  * Interface for validation options
