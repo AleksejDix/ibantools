@@ -6,6 +6,7 @@
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true,
+    "noFallthroughCasesInSwitch": true,
     "declaration": true,
     "noImplicitAny": true,
     "removeComments": true,
