@@ -42,9 +42,10 @@
     "build-node": "rm -rf build && npx tsc src/*.ts --declaration --target es2017 --module commonjs --outDir ./build/",
     "build-bower": "rm -rf dist && npx tsc src/*.ts --declaration --target es2017 --module amd --outDir ./dist/",
     "build-module": "rm -rf jsnext && npx tsc src/*.ts --target es2017 --module es2020 --outDir ./jsnext/",
-    "test": "npm run build && mocha 'test/**/*.js'",
-    "coverage": "c8 mocha && c8 report --reporter=text-lcov > test.lcov",
-    "lint": "eslint 'src/**/*.ts' 'test/**/*.js'",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prepare": "npm run build-node",
     "docs": "typedoc src/ibantools.ts",
     "all": "npm run test && npm run lint && npm run docs"
@@ -57,19 +58,17 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.6",
     "@typescript-eslint/parser": "^7.6",
-    "c8": "^10.1.2",
-    "chai": "^5.0.10",
+    "@vitest/coverage-v8": "^4.0.15",
     "coveralls-next": "^4.2.0",
     "docdash": "^2.0.0",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "mocha": "^11.0.1",
-    "mocha-lcov-reporter": "^1.2.0",
     "prettier": "^3.0.3",
     "requirejs": "^2.3.6",
     "typedoc": "^0.27.2",
-    "typescript": "^5.2"
+    "typescript": "^5.2",
+    "vitest": "^4.0.15"
   },
   "resolutions": {
     "source-map": "^0.8.0-beta.0"
