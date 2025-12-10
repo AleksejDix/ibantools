@@ -1,22 +1,16 @@
 {
   "name": "ibantools",
   "version": "4.5.1",
-  "description": "Validation, extraction and creation of IBAN, BBAN, BIC/SWIFT numbers plus some other helpful stuff like ISO 3136-1 alpha 2 country list",
+  "description": "Validation, extraction and creation of IBAN, BBAN, BIC/SWIFT numbers",
   "keywords": [
     "IBAN",
     "BBAN",
     "BIC",
     "SEPA",
-    "SWIFT",
-    "ISO 3136-1 alpha-2"
+    "SWIFT"
   ],
-  "sideEffects": false,
-  "homepage": "https://github.com/Simplify/ibantools",
-  "bugs": "https://github.com/Simplify/ibantools/issues",
   "type": "module",
-  "main": "./dist/ibantools.js",
-  "module": "./dist/ibantools.js",
-  "types": "./dist/ibantools.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/ibantools.d.ts",
@@ -27,13 +21,15 @@
     "dist",
     "LICENSE"
   ],
-  "directories": {
-    "doc": "docs"
+  "engines": {
+    "node": ">=18"
   },
+  "homepage": "https://github.com/Simplify/ibantools",
   "repository": {
     "type": "git",
     "url": "https://github.com/Simplify/ibantools.git"
   },
+  "bugs": "https://github.com/Simplify/ibantools/issues",
   "scripts": {
     "build": "vite build",
     "test": "vitest run",
