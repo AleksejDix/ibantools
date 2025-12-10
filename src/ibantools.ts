@@ -434,20 +434,12 @@ function mod9710Iban(iban: string): number {
  * is member of not.
  *
  * ```
- * // Validating IBAN form field after user selects his country
- * // <select id="countries">
- * //   ...
- * //   <option value="NL">Netherlands</option>
- * //   ...
- * // </select>
- * $("#countries").select(function() {
- *   // Find country
- *   let country = ibantools.getCountrySpecifications()[$(this).val()];
- *   // Add country code letters to IBAN form field
- *   $("input#iban").value($(this).val());
- *   // Add New value to "pattern" attribute to #iban input text field
- *   $("input#iban").attr("pattern", $(this).val() + "[0-9]{2}" + country.bban_regexp.slice(1).replace("$",""));
- * });
+ * // Get country specifications
+ * const specs = ibantools.getCountrySpecifications();
+ * const nlSpec = specs['NL'];
+ * console.log(nlSpec.chars); // 18
+ * console.log(nlSpec.bban_regexp); // '^[A-Z]{4}[0-9]{10}$'
+ * console.log(nlSpec.SEPA); // true
  * ```
  */
 export function getCountrySpecifications(): CountryMap {
