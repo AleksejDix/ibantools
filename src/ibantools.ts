@@ -733,10 +733,10 @@ const checkMod1110 = (toCheck: string, control: number): boolean => {
   for (let index = 0; index < toCheck.length; index++) {
     nr += parseInt(toCheck.charAt(index), 10);
     if (nr % 10 !== 0) {
-      nr = nr % 10;
+      nr %= 10;
     }
-    nr = nr * 2;
-    nr = nr % 11;
+    nr *= 2;
+    nr %= 11;
   }
   return control === (11 - nr === 10 ? 0 : 11 - nr);
 };
