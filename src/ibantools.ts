@@ -461,8 +461,7 @@ function mod9710Iban(iban: string): number {
  */
 export function getCountrySpecifications(): CountryMap {
   const countyMap: CountryMap = {};
-  for (const countyCode in countrySpecs) {
-    const county = countrySpecs[countyCode];
+  for (const [countyCode, county] of Object.entries(countrySpecs)) {
     countyMap[countyCode] = {
       chars: county.chars || null,
       bban_regexp: county.bban_regexp || null,
