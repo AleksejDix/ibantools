@@ -68,18 +68,19 @@ export function isValidIBAN(iban: string | null | undefined, validationOptions: 
 }
 
 /**
- * IBAM validation errors
+ * IBAN validation errors
  */
-export enum ValidationErrorsIBAN {
-  NoIBANProvided,
-  NoIBANCountry,
-  WrongBBANLength,
-  WrongBBANFormat,
-  ChecksumNotNumber,
-  WrongIBANChecksum,
-  WrongAccountBankBranchChecksum,
-  QRIBANNotAllowed,
-}
+export const ValidationErrorsIBAN = {
+  NoIBANProvided: 0,
+  NoIBANCountry: 1,
+  WrongBBANLength: 2,
+  WrongBBANFormat: 3,
+  ChecksumNotNumber: 4,
+  WrongIBANChecksum: 5,
+  WrongAccountBankBranchChecksum: 6,
+  QRIBANNotAllowed: 7,
+} as const;
+export type ValidationErrorsIBAN = (typeof ValidationErrorsIBAN)[keyof typeof ValidationErrorsIBAN];
 
 /**
  * Interface for ValidateIBAN result
@@ -496,11 +497,12 @@ export function isValidBIC(bic: string | null | undefined): boolean {
 /**
  * BIC validation errors
  */
-export enum ValidationErrorsBIC {
-  NoBICProvided,
-  NoBICCountry,
-  WrongBICFormat,
-}
+export const ValidationErrorsBIC = {
+  NoBICProvided: 0,
+  NoBICCountry: 1,
+  WrongBICFormat: 2,
+} as const;
+export type ValidationErrorsBIC = (typeof ValidationErrorsBIC)[keyof typeof ValidationErrorsBIC];
 
 /**
  * Interface for ValidateBIC result

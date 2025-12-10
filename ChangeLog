@@ -1,4 +1,5 @@
 2025-12-10  Aleksej Dix <git@aleksejdix.com>
+	* Replaced ValidationErrorsIBAN and ValidationErrorsBIC enums with const objects
 	* Replaced TypeScript CLI build with Vite 7.2.7 (ESM only output)
 	* Replaced Mocha/Chai/c8 with Vitest 4.0.15
 	* Replaced ESLint with oxlint 1.32.0 (type-aware linting)

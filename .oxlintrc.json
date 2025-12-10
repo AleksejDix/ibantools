@@ -17,7 +17,6 @@
     "guard-for-in": "off",
     "@typescript-eslint/no-unsafe-type-assertion": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "prefer-enum-initializers": "off",
     "max-lines-per-function": "off",
     "max-lines": "off"
   }
