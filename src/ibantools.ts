@@ -309,23 +309,23 @@ export function extractIBAN(iban: string): ExtractIBANResult {
     result.countryCode = eFormatIBAN.slice(0, 2);
     result.valid = true;
     const spec = countrySpecs[result.countryCode];
-    if (spec.account_indentifier) {
-      const ac = spec.account_indentifier.split('-');
-      const starting = parseInt(ac[0], 10);
-      const ending = parseInt(ac[1], 10);
-      result.accountNumber = result.iban.slice(starting, ending + 1);
+    if (spec?.account_indentifier) {
+      const [start, end] = spec.account_indentifier.split('-');
+      if (start && end) {
+        result.accountNumber = result.iban.slice(parseInt(start, 10), parseInt(end, 10) + 1);
+      }
     }
-    if (spec.bank_identifier) {
-      const ac = spec.bank_identifier.split('-');
-      const starting = parseInt(ac[0], 10);
-      const ending = parseInt(ac[1], 10);
-      result.bankIdentifier = result.bban.slice(starting, ending + 1);
+    if (spec?.bank_identifier) {
+      const [start, end] = spec.bank_identifier.split('-');
+      if (start && end) {
+        result.bankIdentifier = result.bban.slice(parseInt(start, 10), parseInt(end, 10) + 1);
+      }
     }
-    if (spec.branch_indentifier) {
-      const ac = spec.branch_indentifier.split('-');
-      const starting = parseInt(ac[0], 10);
-      const ending = parseInt(ac[1], 10);
-      result.branchIdentifier = result.bban.slice(starting, ending + 1);
+    if (spec?.branch_indentifier) {
+      const [start, end] = spec.branch_indentifier.split('-');
+      if (start && end) {
+        result.branchIdentifier = result.bban.slice(parseInt(start, 10), parseInt(end, 10) + 1);
+      }
     }
   }
   return result;
@@ -642,7 +642,7 @@ const checkNorwayBBAN = (bban: string): boolean => {
   const bbanWithoutControlDigit = bbanWithoutSpacesAndPeriods.substring(0, 10);
   let sum = 0;
   for (let index = 0; index < 10; index++) {
-    sum += parseInt(bbanWithoutControlDigit.charAt(index), 10) * weights[index];
+    sum += parseInt(bbanWithoutControlDigit.charAt(index), 10) * weights[index]!;
   }
   const remainder = sum % 11;
   return controlDigit === (remainder === 0 ? 0 : 11 - remainder);
@@ -706,7 +706,7 @@ const checkPolandBBAN = (bban: string): boolean => {
   const toCheck = bban.substring(0, 7);
   let sum = 0;
   for (let index = 0; index < 7; index++) {
-    sum += parseInt(toCheck.charAt(index), 10) * weights[index];
+    sum += parseInt(toCheck.charAt(index), 10) * weights[index]!;
   }
   const remainder = sum % 10;
   return controlDigit === (remainder === 0 ? 0 : 10 - remainder);
@@ -726,7 +726,7 @@ const checkSpainBBAN = (bban: string): boolean => {
   const account = bban.substring(10, 20);
   let sum = 0;
   for (let index = 0; index < 8; index++) {
-    sum += parseInt(bankBranch.charAt(index), 10) * weightsBankBranch[index];
+    sum += parseInt(bankBranch.charAt(index), 10) * weightsBankBranch[index]!;
   }
   let remainder = sum % 11;
   if (controlBankBranch !== (mod11CheckDigit(remainder))) {
@@ -734,7 +734,7 @@ const checkSpainBBAN = (bban: string): boolean => {
   }
   sum = 0;
   for (let index = 0; index < 10; index++) {
-    sum += parseInt(account.charAt(index), 10) * weightsAccount[index];
+    sum += parseInt(account.charAt(index), 10) * weightsAccount[index]!;
   }
   remainder = sum % 11;
   return controlAccount === (mod11CheckDigit(remainder));
@@ -785,7 +785,7 @@ const checkCzechAndSlovakBBAN = (bban: string): boolean => {
   const suffix = bban.substring(10, 19);
   let sum = 0;
   for (let index = 0; index < prefix.length; index++) {
-    sum += parseInt(prefix.charAt(index), 10) * weightsPrefix[index];
+    sum += parseInt(prefix.charAt(index), 10) * weightsPrefix[index]!;
   }
   let remainder = sum % 11;
   if (controlPrefix !== (mod11CheckDigit(remainder))) {
@@ -793,7 +793,7 @@ const checkCzechAndSlovakBBAN = (bban: string): boolean => {
   }
   sum = 0;
   for (let index = 0; index < suffix.length; index++) {
-    sum += parseInt(suffix.charAt(index), 10) * weightsSuffix[index];
+    sum += parseInt(suffix.charAt(index), 10) * weightsSuffix[index]!;
   }
   remainder = sum % 11;
   return controlSuffix === (mod11CheckDigit(remainder));
@@ -810,7 +810,7 @@ const checkEstonianBBAN = (bban: string): boolean => {
   const toCheck = bban.substring(2, 15);
   let sum = 0;
   for (let index = 0; index < toCheck.length; index++) {
-    sum += parseInt(toCheck.charAt(index), 10) * weights[index];
+    sum += parseInt(toCheck.charAt(index), 10) * weights[index]!;
   }
   const remainder = sum % 10;
   return controlDigit === (remainder === 0 ? 0 : 10 - remainder);
@@ -826,7 +826,7 @@ const checkFrenchBBAN = (bban: string): boolean => {
   const stripped = bban.replace(/[\s.]+/g, '');
   const normalized = Array.from(stripped);
   for (let index = 0; index < stripped.length; index++) {
-    const charCode = normalized[index].charCodeAt(0);
+    const charCode = normalized[index]!.charCodeAt(0);
     if (charCode >= 65) {
       switch (charCode) {
         case 65:
@@ -891,7 +891,7 @@ const checkHungarianBBAN = (bban: string): boolean => {
   const toCheckBankBranch = bban.substring(0, 7);
   let sum = 0;
   for (let index = 0; index < toCheckBankBranch.length; index++) {
-    sum += parseInt(toCheckBankBranch.charAt(index), 10) * weights[index];
+    sum += parseInt(toCheckBankBranch.charAt(index), 10) * weights[index]!;
   }
   const remainder = sum % 10;
   if (controlDigitBankBranch !== (remainder === 0 ? 0 : 10 - remainder)) {
@@ -902,7 +902,7 @@ const checkHungarianBBAN = (bban: string): boolean => {
     const toCheckAccount = bban.substring(8, 15);
     const controlDigitAccount = parseInt(bban.charAt(15), 10);
     for (let index = 0; index < toCheckAccount.length; index++) {
-      sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index];
+      sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index]!;
     }
     const remainder = sum % 10;
     return controlDigitAccount === (remainder === 0 ? 0 : 10 - remainder);
@@ -910,7 +910,7 @@ const checkHungarianBBAN = (bban: string): boolean => {
   const toCheckAccount = bban.substring(8, 23);
   const controlDigitAccount = parseInt(bban.charAt(23), 10);
   for (let index = 0; index < toCheckAccount.length; index++) {
-    sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index];
+    sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index]!;
   }
   const accountRemainder = sum % 10;
   return controlDigitAccount === (accountRemainder === 0 ? 0 : 10 - accountRemainder);
