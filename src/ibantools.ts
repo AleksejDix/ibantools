@@ -46,14 +46,17 @@ export interface ValidateIBANOptions {
  * ```
  */
 export function isValidIBAN(iban: string | null | undefined, validationOptions: ValidateIBANOptions = { allowQRIBAN: true }): boolean {
-  if (iban === undefined || iban === null) return false;
+  if (iban === undefined || iban === null) {
+    return false;
+  }
 
   const reg = new RegExp('^[0-9]{2}$', '');
   const countryCode = iban.slice(0, 2);
   const spec = countrySpecs[countryCode];
 
-  if (spec === undefined || spec.bban_regexp === undefined || spec.bban_regexp === null || spec.chars === undefined)
+  if (spec === undefined || spec.bban_regexp === undefined || spec.bban_regexp === null || spec.chars === undefined) {
     return false;
+  }
 
   return (
     spec.chars === iban.length &&
@@ -159,7 +162,9 @@ export function validateIBAN(
  * ```
  */
 export function isValidBBAN(bban?: string | null, countryCode?: string | null): boolean {
-  if (bban === undefined || bban === null || countryCode === undefined || countryCode === null) return false;
+  if (bban === undefined || bban === null || countryCode === undefined || countryCode === null) {
+    return false;
+  }
 
   const spec = countrySpecs[countryCode];
 
@@ -170,8 +175,9 @@ export function isValidBBAN(bban?: string | null, countryCode?: string | null): 
     spec.bban_regexp === null ||
     spec.chars === undefined ||
     spec.chars === null
-  )
+  ) {
     return false;
+  }
 
   if (spec.chars - 4 === bban.length && checkFormatBBAN(bban, spec.bban_regexp)) {
     if (spec.bban_validation_func) {
@@ -215,10 +221,14 @@ export function isSEPACountry(countryCode: string): boolean {
  * ```
  */
 export function isQRIBAN(iban: string): boolean {
-  if (iban === undefined || iban === null) return false;
+  if (iban === undefined || iban === null) {
+    return false;
+  }
   const countryCode = iban.slice(0, 2);
   const QRIBANCountries: string[] = ['LI', 'CH'];
-  if (!QRIBANCountries.includes(countryCode)) return false;
+  if (!QRIBANCountries.includes(countryCode)) {
+    return false;
+  }
   const reg = new RegExp('^3[0-1]{1}[0-9]{3}$', '');
   return reg.test(iban.slice(4, 9));
 }
