@@ -429,9 +429,9 @@ function replaceCharaterWithCode(str: string): string {
   // https://jsbench.me/ttkzgsekae/1
   return str
     .split('')
-    .map((c) => {
-      const code = c.charCodeAt(0);
-      return code >= 65 ? (code - 55).toString() : c;
+    .map((char) => {
+      const code = char.charCodeAt(0);
+      return code >= 65 ? (code - 55).toString() : char;
     })
     .join('');
 }
@@ -827,9 +827,9 @@ const checkFrenchBBAN = (bban: string): boolean => {
   const stripped = bban.replace(/[\s.]+/g, '');
   const normalized = Array.from(stripped);
   for (let index = 0; index < stripped.length; index++) {
-    const c = normalized[index].charCodeAt(0);
-    if (c >= 65) {
-      switch (c) {
+    const charCode = normalized[index].charCodeAt(0);
+    if (charCode >= 65) {
+      switch (charCode) {
         case 65:
         case 74:
           normalized[index] = '1';
