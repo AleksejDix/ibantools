@@ -7,6 +7,7 @@
     "exactOptionalPropertyTypes": true,
     "verbatimModuleSyntax": true,
     "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "noImplicitAny": true,
     "removeComments": true,
