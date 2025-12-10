@@ -304,20 +304,20 @@ export function extractIBAN(iban: string): ExtractIBANResult {
     const spec = countrySpecs[result.countryCode];
     if (spec.account_indentifier) {
       const ac = spec.account_indentifier.split('-');
-      const starting = parseInt(ac[0]);
-      const ending = parseInt(ac[1]);
+      const starting = parseInt(ac[0], 10);
+      const ending = parseInt(ac[1], 10);
       result.accountNumber = result.iban.slice(starting, ending + 1);
     }
     if (spec.bank_identifier) {
       const ac = spec.bank_identifier.split('-');
-      const starting = parseInt(ac[0]);
-      const ending = parseInt(ac[1]);
+      const starting = parseInt(ac[0], 10);
+      const ending = parseInt(ac[1], 10);
       result.bankIdentifier = result.bban.slice(starting, ending + 1);
     }
     if (spec.branch_indentifier) {
       const ac = spec.branch_indentifier.split('-');
-      const starting = parseInt(ac[0]);
-      const ending = parseInt(ac[1]);
+      const starting = parseInt(ac[0], 10);
+      const ending = parseInt(ac[1], 10);
       result.branchIdentifier = result.bban.slice(starting, ending + 1);
     }
   }
