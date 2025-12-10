@@ -13,8 +13,8 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/ibantools.d.ts",
-      "import": "./dist/ibantools.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "files": [

@@ -4,7 +4,7 @@
  * SPDX-FileCopyrightText: Saša Jovanić
  * SPDX-License-Identifier: MIT or MPL/2.0 */
 
-import * as iban from '../src/ibantools';
+import * as iban from '../src/index';
 import { describe, expect, it } from 'vitest';
 
 describe('IBANTools', () => {
