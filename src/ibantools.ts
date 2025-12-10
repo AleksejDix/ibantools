@@ -586,9 +586,7 @@ export interface CountrySpec {
 /**
  * Interface for Map of Country Specifications
  */
-export interface CountryMap {
-  [code: string]: CountrySpec;
-}
+export type CountryMap = Record<string, CountrySpec>;
 
 /**
  * Interface for IBAN Country Specification
@@ -609,9 +607,7 @@ interface CountrySpecInternal {
 /**
  * Interface for Map of Country Specifications
  */
-interface CountryMapInternal {
-  [code: string]: CountrySpecInternal;
-}
+type CountryMapInternal = Record<string, CountrySpecInternal>;
 
 /**
  * Calculate MOD 11 check digit
