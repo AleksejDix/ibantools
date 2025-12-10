@@ -3,7 +3,7 @@
   "categories": {
     "correctness": "error",
     "suspicious": "warn",
-    "pedantic": "off",
+    "pedantic": "warn",
     "perf": "warn",
     "style": "warn"
   },
@@ -15,6 +15,13 @@
     "no-ternary": "off",
     "id-length": "off",
     "guard-for-in": "off",
-    "@typescript-eslint/no-unsafe-type-assertion": "off"
+    "@typescript-eslint/no-unsafe-type-assertion": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "prefer-enum-initializers": "off",
+    "radix": "off",
+    "max-lines-per-function": "off",
+    "max-lines": "off",
+    "prefer-includes": "off",
+    "no-else-return": "off"
   }
 }
