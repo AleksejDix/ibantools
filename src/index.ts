@@ -19,14 +19,24 @@
  */
 'use strict';
 
+import {
+  type ComposeIBANParams,
+  type CountryMap,
+  type CountryMapInternal,
+  type CountrySpec,
+  type ExtractBICResult,
+  type ExtractIBANResult,
+  type ValidateBICResult,
+  type ValidateIBANOptions,
+  type ValidateIBANResult,
+  ValidationErrorsBIC,
+  ValidationErrorsIBAN,
+} from './core/types';
 import { MOD_97, MOD_97_REMAINDER } from './core/constants';
+import { checkFormatBBAN, isValidIBANChecksum, mod9710, mod9710Iban } from './core/helpers';
 
-/**
- * Interface for validation options
- */
-export interface ValidateIBANOptions {
-  allowQRIBAN: boolean;
-}
+export { ValidationErrorsBIC, ValidationErrorsIBAN };
+export type { ComposeIBANParams, CountryMap, CountrySpec, ExtractBICResult, ExtractIBANResult, ValidateBICResult, ValidateIBANOptions, ValidateIBANResult };
 
 /**
  * Validate IBAN
@@ -67,29 +77,6 @@ export function isValidIBAN(iban: string | null | undefined, validationOptions: 
     isValidIBANChecksum(iban) &&
     (validationOptions.allowQRIBAN || !isQRIBAN(iban))
   );
-}
-
-/**
- * IBAN validation errors
- */
-export const ValidationErrorsIBAN = {
-  NoIBANProvided: 0,
-  NoIBANCountry: 1,
-  WrongBBANLength: 2,
-  WrongBBANFormat: 3,
-  ChecksumNotNumber: 4,
-  WrongIBANChecksum: 5,
-  WrongAccountBankBranchChecksum: 6,
-  QRIBANNotAllowed: 7,
-} as const;
-export type ValidationErrorsIBAN = (typeof ValidationErrorsIBAN)[keyof typeof ValidationErrorsIBAN];
-
-/**
- * Interface for ValidateIBAN result
- */
-export interface ValidateIBANResult {
-  errorCodes: ValidationErrorsIBAN[];
-  valid: boolean;
 }
 
 /**
@@ -237,14 +224,6 @@ export function isQRIBAN(iban: string): boolean {
 }
 
 /**
- * Interface for ComposeIBAN parameteres
- */
-export interface ComposeIBANParams {
-  countryCode?: string | null;
-  bban?: string | null;
-}
-
-/**
  * composeIBAN
  *
  * ```
@@ -272,19 +251,6 @@ export function composeIBAN(params: ComposeIBANParams): string | null {
     return `${params.countryCode}${`0${MOD_97_REMAINDER - checksom}`.slice(-2)}${formated_bban}`;
   }
   return null;
-}
-
-/**
- * Interface for ExtractIBAN result
- */
-export interface ExtractIBANResult {
-  iban: string;
-  bban?: string;
-  countryCode?: string;
-  accountNumber?: string;
-  branchIdentifier?: string;
-  bankIdentifier?: string;
-  valid: boolean;
 }
 
 /**
@@ -325,16 +291,6 @@ export function extractIBAN(iban: string): ExtractIBANResult {
     }
   }
   return result;
-}
-
-/**
- * Check BBAN format
- *
- * @ignore
- */
-function checkFormatBBAN(bban: string, bformat: string): boolean {
-  const reg = new RegExp(bformat, '');
-  return reg.test(bban);
 }
 
 /**
@@ -379,66 +335,6 @@ export function friendlyFormatIBAN(iban?: string | null, separator?: string): st
     return null;
   }
   return electronic_iban.replace(/(.{4})(?!$)/g, `$1${separator}`);
-}
-
-/**
- * Calculate checksum of IBAN and compares it with checksum provided in IBAN Registry
- *
- * @ignore
- */
-function isValidIBANChecksum(iban: string): boolean {
-  const countryCode: string = iban.slice(0, 2);
-  const providedChecksum: number = parseInt(iban.slice(2, 4), 10);
-  const bban: string = iban.slice(4);
-
-  // Wikipedia[validating_iban] says there are a specif way to check if a IBAN is valid but
-  // it. It says 'If the remainder is 1, the check digit test is passed and the
-  // IBAN might be valid.'. might, MIGHT!
-  // We don't want might but want yes or no. Since every BBAN is IBAN from the fifth
-  // (slice(4)) we can generate the IBAN from BBAN and country code(two first characters)
-  // from in the IBAN.
-  // To generate the (generate the iban check digits)[generating-iban-check]
-  //   Move the country code to the end
-  //   remove the checksum from the begging
-  //   Add "00" to the end
-  //   modulo 97 on the amount
-  //   subtract remainder from 98, (98 - remainder)
-  //   Add a leading 0 if the remainder is less then 10 (padStart(2, "0")) (we skip this
-  //     since we compare int, not string)
-  //
-  // [validating_iban][https://en.wikipedia.org/wiki/International_Bank_Account_Number#Validating_the_IBAN]
-  // [generating-iban-check][https://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits]
-
-  const validationString = replaceCharaterWithCode(`${bban}${countryCode}00`);
-  const rest = mod9710(validationString);
-  return MOD_97_REMAINDER - rest === providedChecksum;
-}
-
-/**
- * Iban contain characters and should be converted to intereger by 55 substracted
- * from there ascii value
- *
- * @ignore
- */
-function replaceCharaterWithCode(str: string): string {
-  // It is slower but alot more readable
-  // https://jsbench.me/ttkzgsekae/1
-  return str
-    .split('')
-    .map((char) => {
-      const code = char.charCodeAt(0);
-      return code >= 65 ? (code - 55).toString() : char;
-    })
-    .join('');
-}
-
-/**
- * MOD-97-10
- *
- * @ignore
- */
-function mod9710Iban(iban: string): number {
-  return mod9710(replaceCharaterWithCode(iban.slice(4) + iban.slice(0, 4)));
 }
 
 /**
@@ -498,21 +394,6 @@ export function isValidBIC(bic: string | null | undefined): boolean {
 /**
  * BIC validation errors
  */
-export const ValidationErrorsBIC = {
-  NoBICProvided: 0,
-  NoBICCountry: 1,
-  WrongBICFormat: 2,
-} as const;
-export type ValidationErrorsBIC = (typeof ValidationErrorsBIC)[keyof typeof ValidationErrorsBIC];
-
-/**
- * Interface for ValidateBIC result
- */
-export interface ValidateBICResult {
-  errorCodes: ValidationErrorsBIC[];
-  valid: boolean;
-}
-
 /**
  * validateBIC
  * ```
@@ -542,18 +423,6 @@ export function validateBIC(bic?: string | null): ValidateBICResult {
 }
 
 /**
- * Interface for ExtractBIC result
- */
-export interface ExtractBICResult {
-  bankCode?: string;
-  countryCode?: string;
-  locationCode?: string;
-  branchCode: string | null;
-  testBIC: boolean;
-  valid: boolean;
-}
-
-/**
  * extractBIC
  * ```
  * // returns {bankCode: "ABNA", countryCode: "NL", locationCode: "2A", branchCode: null, testBIC: false, valid: true}
@@ -575,42 +444,6 @@ export function extractBIC(inputBic: string): ExtractBICResult {
   }
   return result;
 }
-
-/**
- * Interface for IBAN Country Specification
- */
-export interface CountrySpec {
-  chars: number | null;
-  bban_regexp: string | null;
-  IBANRegistry: boolean; // Is country part of official IBAN registry
-  SEPA: boolean; // Is county part of SEPA initiative
-}
-
-/**
- * Interface for Map of Country Specifications
- */
-export type CountryMap = Record<string, CountrySpec>;
-
-/**
- * Interface for IBAN Country Specification
- *
- * @ignore
- */
-interface CountrySpecInternal {
-  chars?: number;
-  bban_regexp?: string;
-  bban_validation_func?: (bban: string) => boolean;
-  IBANRegistry?: boolean; // Is country part of official IBAN registry
-  SEPA?: boolean; // Is county part of SEPA initiative
-  branch_indentifier?: string;
-  bank_identifier?: string;
-  account_indentifier?: string;
-}
-
-/**
- * Interface for Map of Country Specifications
- */
-type CountryMapInternal = Record<string, CountrySpecInternal>;
 
 /**
  * Calculate MOD 11 check digit
@@ -655,28 +488,6 @@ const checkBelgianBBAN = (bban: string): boolean => {
   const checksum = parseInt(stripped.substring(stripped.length - 2, stripped.length), 10);
   const remainder = checkingPart % MOD_97 === 0 ? MOD_97 : checkingPart % MOD_97;
   return remainder === checksum;
-};
-
-/**
- * Mod 97/10 calculation
- *
- * @ignore
- */
-const mod9710 = (validationString: string): number => {
-  while (validationString.length > 2) {
-    // > Any computer programming language or software package that is used to compute D
-    // > mod 97 directly must have the ability to handle integers of more than 30 digits.
-    // > In practice, this can only be done by software that either supports
-    // > arbitrary-precision arithmetic or that can handle 219-bit (unsigned) integers
-    // https://en.wikipedia.org/wiki/International_Bank_Account_Number#Modulo_operation_on_IBAN
-    const part = validationString.slice(0, 6);
-    const partInt = parseInt(part, 10);
-    if (isNaN(partInt)) {
-      return NaN;
-    }
-    validationString = (partInt % MOD_97) + validationString.slice(part.length);
-  }
-  return parseInt(validationString, 10) % MOD_97;
 };
 
 /**
