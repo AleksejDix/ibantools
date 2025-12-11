@@ -50,3 +50,11 @@ export function isValidIBANChecksum(iban: string): boolean {
   const rest = mod9710(validationString);
   return MOD_97_REMAINDER - rest === providedChecksum;
 }
+
+export function weightedSum(digits: string, weights: readonly number[]): number {
+  let sum = 0;
+  for (let idx = 0; idx < digits.length; idx++) {
+    sum += parseInt(digits.charAt(idx), 10) * weights[idx]!;
+  }
+  return sum;
+}

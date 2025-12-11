@@ -1,5 +1,5 @@
 import { MOD_97 } from './core/constants';
-import { mod9710, stripSpacesAndPeriods } from './core/checksum';
+import { mod9710, stripSpacesAndPeriods, weightedSum } from './core/checksum';
 
 const mod11CheckDigit = (remainder: number): number => {
   if (remainder === 0) {
@@ -24,16 +24,12 @@ const checkMod1110 = (toCheck: string, control: number): boolean => {
   return control === (11 - nr === 10 ? 0 : 11 - nr);
 };
 
+const NORWAY_WEIGHTS = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2] as const;
+
 export const checkNorwayBBAN = (bban: string): boolean => {
-  const weights = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
-  const bbanWithoutSpacesAndPeriods = stripSpacesAndPeriods(bban);
-  const controlDigit = parseInt(bbanWithoutSpacesAndPeriods.charAt(10), 10);
-  const bbanWithoutControlDigit = bbanWithoutSpacesAndPeriods.substring(0, 10);
-  let sum = 0;
-  for (let index = 0; index < 10; index++) {
-    sum += parseInt(bbanWithoutControlDigit.charAt(index), 10) * weights[index]!;
-  }
-  const remainder = sum % 11;
+  const stripped = stripSpacesAndPeriods(bban);
+  const controlDigit = parseInt(stripped.charAt(10), 10);
+  const remainder = weightedSum(stripped.substring(0, 10), NORWAY_WEIGHTS) % 11;
   return controlDigit === (remainder === 0 ? 0 : 11 - remainder);
 };
 
@@ -51,39 +47,26 @@ export const checkMod9710BBAN = (bban: string): boolean => {
   return reminder === 1;
 };
 
+const POLAND_WEIGHTS = [3, 9, 7, 1, 3, 9, 7] as const;
+
 export const checkPolandBBAN = (bban: string): boolean => {
-  const weights = [3, 9, 7, 1, 3, 9, 7];
   const controlDigit = parseInt(bban.charAt(7), 10);
-  const toCheck = bban.substring(0, 7);
-  let sum = 0;
-  for (let index = 0; index < 7; index++) {
-    sum += parseInt(toCheck.charAt(index), 10) * weights[index]!;
-  }
-  const remainder = sum % 10;
+  const remainder = weightedSum(bban.substring(0, 7), POLAND_WEIGHTS) % 10;
   return controlDigit === (remainder === 0 ? 0 : 10 - remainder);
 };
 
+const SPAIN_BANK_BRANCH_WEIGHTS = [4, 8, 5, 10, 9, 7, 3, 6] as const;
+const SPAIN_ACCOUNT_WEIGHTS = [1, 2, 4, 8, 5, 10, 9, 7, 3, 6] as const;
+
 export const checkSpainBBAN = (bban: string): boolean => {
-  const weightsBankBranch = [4, 8, 5, 10, 9, 7, 3, 6];
-  const weightsAccount = [1, 2, 4, 8, 5, 10, 9, 7, 3, 6];
   const controlBankBranch = parseInt(bban.charAt(8), 10);
   const controlAccount = parseInt(bban.charAt(9), 10);
-  const bankBranch = bban.substring(0, 8);
-  const account = bban.substring(10, 20);
-  let sum = 0;
-  for (let index = 0; index < 8; index++) {
-    sum += parseInt(bankBranch.charAt(index), 10) * weightsBankBranch[index]!;
-  }
-  let remainder = sum % 11;
-  if (controlBankBranch !== mod11CheckDigit(remainder)) {
+  const bankBranchRemainder = weightedSum(bban.substring(0, 8), SPAIN_BANK_BRANCH_WEIGHTS) % 11;
+  if (controlBankBranch !== mod11CheckDigit(bankBranchRemainder)) {
     return false;
   }
-  sum = 0;
-  for (let index = 0; index < 10; index++) {
-    sum += parseInt(account.charAt(index), 10) * weightsAccount[index]!;
-  }
-  remainder = sum % 11;
-  return controlAccount === mod11CheckDigit(remainder);
+  const accountRemainder = weightedSum(bban.substring(10, 20), SPAIN_ACCOUNT_WEIGHTS) % 11;
+  return controlAccount === mod11CheckDigit(accountRemainder);
 };
 
 export const checkCroatianBBAN = (bban: string): boolean => {
@@ -94,38 +77,25 @@ export const checkCroatianBBAN = (bban: string): boolean => {
   return checkMod1110(bankBranch, controlBankBranch) && checkMod1110(account, controlAccount);
 };
 
+const CZECH_PREFIX_WEIGHTS = [10, 5, 8, 4, 2, 1] as const;
+const CZECH_SUFFIX_WEIGHTS = [6, 3, 7, 9, 10, 5, 8, 4, 2, 1] as const;
+
 export const checkCzechAndSlovakBBAN = (bban: string): boolean => {
-  const weightsPrefix = [10, 5, 8, 4, 2, 1];
-  const weightsSuffix = [6, 3, 7, 9, 10, 5, 8, 4, 2, 1];
   const controlPrefix = parseInt(bban.charAt(9), 10);
   const controlSuffix = parseInt(bban.charAt(19), 10);
-  const prefix = bban.substring(4, 9);
-  const suffix = bban.substring(10, 19);
-  let sum = 0;
-  for (let index = 0; index < prefix.length; index++) {
-    sum += parseInt(prefix.charAt(index), 10) * weightsPrefix[index]!;
-  }
-  let remainder = sum % 11;
-  if (controlPrefix !== mod11CheckDigit(remainder)) {
+  const prefixRemainder = weightedSum(bban.substring(4, 9), CZECH_PREFIX_WEIGHTS) % 11;
+  if (controlPrefix !== mod11CheckDigit(prefixRemainder)) {
     return false;
   }
-  sum = 0;
-  for (let index = 0; index < suffix.length; index++) {
-    sum += parseInt(suffix.charAt(index), 10) * weightsSuffix[index]!;
-  }
-  remainder = sum % 11;
-  return controlSuffix === mod11CheckDigit(remainder);
+  const suffixRemainder = weightedSum(bban.substring(10, 19), CZECH_SUFFIX_WEIGHTS) % 11;
+  return controlSuffix === mod11CheckDigit(suffixRemainder);
 };
 
+const ESTONIA_WEIGHTS = [7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7] as const;
+
 export const checkEstonianBBAN = (bban: string): boolean => {
-  const weights = [7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7];
   const controlDigit = parseInt(bban.charAt(15), 10);
-  const toCheck = bban.substring(2, 15);
-  let sum = 0;
-  for (let index = 0; index < toCheck.length; index++) {
-    sum += parseInt(toCheck.charAt(index), 10) * weights[index]!;
-  }
-  const remainder = sum % 10;
+  const remainder = weightedSum(bban.substring(2, 15), ESTONIA_WEIGHTS) % 10;
   return controlDigit === (remainder === 0 ? 0 : 10 - remainder);
 };
 
@@ -187,33 +157,20 @@ export const checkFrenchBBAN = (bban: string): boolean => {
   return remainder === 0;
 };
 
+const HUNGARY_WEIGHTS = [9, 7, 3, 1, 9, 7, 3, 1, 9, 7, 3, 1, 9, 7, 3] as const;
+
 export const checkHungarianBBAN = (bban: string): boolean => {
-  const weights = [9, 7, 3, 1, 9, 7, 3, 1, 9, 7, 3, 1, 9, 7, 3];
   const controlDigitBankBranch = parseInt(bban.charAt(7), 10);
-  const toCheckBankBranch = bban.substring(0, 7);
-  let sum = 0;
-  for (let index = 0; index < toCheckBankBranch.length; index++) {
-    sum += parseInt(toCheckBankBranch.charAt(index), 10) * weights[index]!;
-  }
-  const remainder = sum % 10;
-  if (controlDigitBankBranch !== (remainder === 0 ? 0 : 10 - remainder)) {
+  const bankBranchRemainder = weightedSum(bban.substring(0, 7), HUNGARY_WEIGHTS) % 10;
+  if (controlDigitBankBranch !== (bankBranchRemainder === 0 ? 0 : 10 - bankBranchRemainder)) {
     return false;
   }
-  sum = 0;
   if (bban.endsWith('00000000')) {
-    const toCheckAccount = bban.substring(8, 15);
     const controlDigitAccount = parseInt(bban.charAt(15), 10);
-    for (let index = 0; index < toCheckAccount.length; index++) {
-      sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index]!;
-    }
-    const accountRemainder = sum % 10;
+    const accountRemainder = weightedSum(bban.substring(8, 15), HUNGARY_WEIGHTS) % 10;
     return controlDigitAccount === (accountRemainder === 0 ? 0 : 10 - accountRemainder);
   }
-  const toCheckAccount = bban.substring(8, 23);
   const controlDigitAccount = parseInt(bban.charAt(23), 10);
-  for (let index = 0; index < toCheckAccount.length; index++) {
-    sum += parseInt(toCheckAccount.charAt(index), 10) * weights[index]!;
-  }
-  const accountRemainder = sum % 10;
+  const accountRemainder = weightedSum(bban.substring(8, 23), HUNGARY_WEIGHTS) % 10;
   return controlDigitAccount === (accountRemainder === 0 ? 0 : 10 - accountRemainder);
 };
