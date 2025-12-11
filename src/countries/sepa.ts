@@ -6,7 +6,7 @@
  */
 
 import { type CountryMap } from '../core/types';
-import { countrySpecs } from './specs-all';
+import { countrySpecs } from './specs';
 
 /**
  * Validate if country code is from a SEPA country

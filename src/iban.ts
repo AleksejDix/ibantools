@@ -16,7 +16,7 @@
 
 import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/checksum';
 import { type ComposeIBANParams, type ExtractIBANResult, type ValidateIBANOptions, type ValidateIBANResult, ValidationErrorsIBAN } from './core/types';
-import { countrySpecs } from './countries/specs-all';
+import { countrySpecs } from './countries/specs';
 import { electronicFormatIBAN } from './format';
 import { isValidBBAN } from './bban';
 import { MOD_97_REMAINDER } from './core/constants';

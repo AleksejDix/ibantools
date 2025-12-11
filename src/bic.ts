@@ -15,7 +15,7 @@
 'use strict';
 
 import { type ExtractBICResult, type ValidateBICResult, ValidationErrorsBIC } from './core/types';
-import { countrySpecs } from './countries/specs-all';
+import { countrySpecs } from './countries/specs';
 
 /**
  * Validate BIC/SWIFT

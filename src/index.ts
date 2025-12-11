@@ -37,4 +37,4 @@ export { isValidBBAN } from './bban';
 
 // Re-export country utilities and specs
 export { getCountrySpecifications, isSEPACountry, setCountryBBANValidation } from './countries/sepa';
-export { countrySpecs } from './countries/specs-all';
+export { countrySpecs } from './countries/specs';
