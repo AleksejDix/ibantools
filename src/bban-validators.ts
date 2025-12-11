@@ -1,5 +1,5 @@
 import { MOD_97 } from './core/constants';
-import { mod9710 } from './core/checksum';
+import { mod9710, stripSpacesAndPeriods } from './core/checksum';
 
 const mod11CheckDigit = (remainder: number): number => {
   if (remainder === 0) {
@@ -26,7 +26,7 @@ const checkMod1110 = (toCheck: string, control: number): boolean => {
 
 export const checkNorwayBBAN = (bban: string): boolean => {
   const weights = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
-  const bbanWithoutSpacesAndPeriods = bban.replace(/[\s.]+/g, '');
+  const bbanWithoutSpacesAndPeriods = stripSpacesAndPeriods(bban);
   const controlDigit = parseInt(bbanWithoutSpacesAndPeriods.charAt(10), 10);
   const bbanWithoutControlDigit = bbanWithoutSpacesAndPeriods.substring(0, 10);
   let sum = 0;
@@ -38,7 +38,7 @@ export const checkNorwayBBAN = (bban: string): boolean => {
 };
 
 export const checkBelgianBBAN = (bban: string): boolean => {
-  const stripped = bban.replace(/[\s.]+/g, '');
+  const stripped = stripSpacesAndPeriods(bban);
   const checkingPart = parseInt(stripped.substring(0, stripped.length - 2), 10);
   const checksum = parseInt(stripped.substring(stripped.length - 2, stripped.length), 10);
   const remainder = checkingPart % MOD_97 === 0 ? MOD_97 : checkingPart % MOD_97;
@@ -46,7 +46,7 @@ export const checkBelgianBBAN = (bban: string): boolean => {
 };
 
 export const checkMod9710BBAN = (bban: string): boolean => {
-  const stripped = bban.replace(/[\s.]+/g, '');
+  const stripped = stripSpacesAndPeriods(bban);
   const reminder = mod9710(stripped);
   return reminder === 1;
 };
@@ -130,7 +130,7 @@ export const checkEstonianBBAN = (bban: string): boolean => {
 };
 
 export const checkFrenchBBAN = (bban: string): boolean => {
-  const stripped = bban.replace(/[\s.]+/g, '');
+  const stripped = stripSpacesAndPeriods(bban);
   const normalized = Array.from(stripped);
   for (let index = 0; index < stripped.length; index++) {
     const charCode = normalized[index]!.charCodeAt(0);

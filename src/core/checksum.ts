@@ -1,6 +1,11 @@
 import { MOD_97, MOD_97_REMAINDER } from './constants';
 
 const bbanRegexCache = new Map<string, RegExp>();
+const WHITESPACE_REGEX = /[\s.]+/g;
+
+export function stripSpacesAndPeriods(str: string): string {
+  return str.replace(WHITESPACE_REGEX, '');
+}
 
 export function checkFormatBBAN(bban: string, bformat: string): boolean {
   let reg = bbanRegexCache.get(bformat);

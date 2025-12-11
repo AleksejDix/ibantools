@@ -14,7 +14,7 @@
  */
 'use strict';
 
-import { checkFormatBBAN } from './core/checksum';
+import { checkFormatBBAN, stripSpacesAndPeriods } from './core/checksum';
 import { countrySpecs } from './countries/specs';
 
 /**
@@ -49,7 +49,7 @@ export function isValidBBAN(bban: string | null | undefined, countryCode: string
 
   if (spec.chars - 4 === bban.length && checkFormatBBAN(bban, spec.bban_regexp)) {
     if (spec.bban_validation_func) {
-      return spec.bban_validation_func(bban.replace(/[\s.]+/g, ''));
+      return spec.bban_validation_func(stripSpacesAndPeriods(bban));
     }
     return true;
   }
