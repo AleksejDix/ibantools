@@ -1,7 +1,13 @@
 import { MOD_97, MOD_97_REMAINDER } from './constants';
 
+const bbanRegexCache = new Map<string, RegExp>();
+
 export function checkFormatBBAN(bban: string, bformat: string): boolean {
-  const reg = new RegExp(bformat, '');
+  let reg = bbanRegexCache.get(bformat);
+  if (!reg) {
+    reg = new RegExp(bformat);
+    bbanRegexCache.set(bformat, reg);
+  }
   return reg.test(bban);
 }
 
