@@ -36,5 +36,5 @@ export { extractBIC, isValidBIC, validateBIC } from './bic';
 export { isValidBBAN } from './bban';
 
 // Re-export country utilities and specs
-export { getCountrySpecifications, isSEPACountry, setCountryBBANValidation } from './countries/utils';
+export { getCountrySpecifications, isSEPACountry, setCountryBBANValidation } from './countries/sepa';
 export { countrySpecs } from './countries/specs-all';
