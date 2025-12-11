@@ -24,7 +24,7 @@ export { ValidationErrorsBIC, ValidationErrorsIBAN } from './core/types';
 export type { ComposeIBANParams, CountryMap, CountrySpec, ExtractBICResult, ExtractIBANResult, ValidateBICResult, ValidateIBANOptions, ValidateIBANResult } from './core/types';
 
 // Re-export utility functions
-export { electronicFormatIBAN, friendlyFormatIBAN } from './utils';
+export { electronicFormatIBAN, friendlyFormatIBAN } from './format';
 
 // Re-export IBAN functions
 export { composeIBAN, extractIBAN, isQRIBAN, isValidIBAN, validateIBAN } from './iban';
