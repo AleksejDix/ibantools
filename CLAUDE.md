@@ -39,20 +39,42 @@ npm run all
 
 ## Code Architecture
 
-### Single-file Library Structure
+### Modular Structure
 
-The entire library is contained in `src/index.ts` (~1,866 lines). This is intentional for simplicity and contains:
+The library is organized into focused modules for maintainability and tree-shaking:
+
+```
+src/
+├── index.ts                 # Main barrel (re-exports all public API)
+├── iban.ts                  # IBAN functions (isValidIBAN, validateIBAN, composeIBAN, extractIBAN, isQRIBAN)
+├── bic.ts                   # BIC functions (isValidBIC, validateBIC, extractBIC)
+├── bban.ts                  # BBAN functions (isValidBBAN)
+├── bban-validators.ts       # Country-specific BBAN validators (14 functions)
+├── utils.ts                 # Format utilities (electronicFormatIBAN, friendlyFormatIBAN)
+├── core/
+│   ├── constants.ts         # MOD_97, MOD_97_REMAINDER
+│   ├── types.ts             # All interfaces, types, enums
+│   └── helpers.ts           # Internal utilities (mod9710, checkFormatBBAN, etc.)
+└── countries/
+    ├── specs-all.ts         # Country specifications (249 countries)
+    └── utils.ts             # Country utilities (isSEPACountry, getCountrySpecifications, setCountryBBANValidation)
+```
+
+### Public API
+
+All public functions are re-exported from `src/index.ts`:
 
 1. **Validation Functions**: `isValidIBAN()`, `isValidBBAN()`, `isValidBIC()`
 2. **Detailed Validation**: `validateIBAN()`, `validateBIC()` - return error codes for debugging
 3. **Creation**: `composeIBAN()` - generates valid IBANs from country code + BBAN
 4. **Extraction**: `extractIBAN()`, `extractBIC()` - parse and extract components
 5. **Formatting**: `electronicFormatIBAN()`, `friendlyFormatIBAN()`
-6. **Utilities**: `isSEPACountry()`, `isQRIBAN()`, `getCountrySpecifications()`
+6. **Utilities**: `isSEPACountry()`, `isQRIBAN()`, `getCountrySpecifications()`, `setCountryBBANValidation()`
+7. **Data**: `countrySpecs` - country specification object
 
 ### Country Specifications (`countrySpecs`)
 
-The core of the library is the `countrySpecs` object which contains validation rules for every country (including non-IBAN countries with empty specs). Each spec includes:
+Located in `src/countries/specs-all.ts`, the `countrySpecs` object contains validation rules for every country (including non-IBAN countries with empty specs). Each spec includes:
 
 - `chars`: IBAN length
 - `bban_regexp`: Regex pattern for BBAN validation
@@ -72,17 +94,17 @@ IBAN validation uses MOD-97-10 checksum (ISO 7064):
 
 ### Country-Specific BBAN Validation
 
-Many countries have additional BBAN validation beyond regex matching:
-- **Belgium (BE)**: MOD-97 check on account number
-- **Norway (NO)**: MOD-11 weighted checksum (weights: 5,4,3,2,7,6,5,4,3,2)
-- **Poland (PL)**: MOD-10 weighted checksum on bank code
-- **Spain (ES)**: Dual MOD-11 checksums (bank+branch, then account)
-- **Croatia (HR)**: Dual MOD-11/10 checksums
-- **Czech (CZ) / Slovakia (SK)**: Dual MOD-11 checksums on prefix and suffix
-- **Estonia (EE)**: MOD-10 weighted checksum
-- **France (FR) / Monaco (MC)**: Letter-to-number conversion + MOD-97
-- **Hungary (HU)**: MOD-10 weighted checksums (bank+branch, then account)
-- **Portugal (PT), Slovenia (SI), Serbia (RS), Montenegro (ME), Bosnia (BA), North Macedonia (MK)**: MOD-97/10 on full BBAN
+Located in `src/bban-validators.ts`, these functions provide additional BBAN validation beyond regex matching:
+- **Belgium (BE)**: `checkBelgianBBAN` - MOD-97 check on account number
+- **Norway (NO)**: `checkNorwayBBAN` - MOD-11 weighted checksum (weights: 5,4,3,2,7,6,5,4,3,2)
+- **Poland (PL)**: `checkPolandBBAN` - MOD-10 weighted checksum on bank code
+- **Spain (ES)**: `checkSpainBBAN` - Dual MOD-11 checksums (bank+branch, then account)
+- **Croatia (HR)**: `checkCroatianBBAN` - Dual MOD-11/10 checksums
+- **Czech (CZ) / Slovakia (SK)**: `checkCzechAndSlovakBBAN` - Dual MOD-11 checksums on prefix and suffix
+- **Estonia (EE)**: `checkEstonianBBAN` - MOD-10 weighted checksum
+- **France (FR) / Monaco (MC)**: `checkFrenchBBAN` - Letter-to-number conversion + MOD-97
+- **Hungary (HU)**: `checkHungarianBBAN` - MOD-10 weighted checksums (bank+branch, then account)
+- **Portugal (PT), Slovenia (SI), Serbia (RS), Montenegro (ME), Bosnia (BA), North Macedonia (MK)**: `checkMod9710BBAN` - MOD-97/10 on full BBAN
 
 ### Extensibility
 
@@ -96,7 +118,7 @@ The `countrySpecs` are derived from the SWIFT IBAN Registry. To update when a ne
 2. Save as `registry/iban-registry-vXXX.txt` (where XXX is version number)
 3. Run `node registry/builder.mjs` to regenerate country specifications
 4. The builder script parses the tab-separated TXT file and generates proper TypeScript code
-5. **Important**: The generated output needs to be manually integrated into `src/index.ts` - the builder doesn't automatically update the source file
+5. **Important**: The generated output needs to be manually integrated into `src/countries/specs-all.ts` - the builder doesn't automatically update the source file
 6. Run `npm test` to verify all tests pass with updated specifications
 7. Update version number in `registry/README.md`
 

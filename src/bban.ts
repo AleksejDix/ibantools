@@ -15,7 +15,7 @@
 'use strict';
 
 import { checkFormatBBAN } from './core/helpers';
-import { countrySpecs } from './index';
+import { countrySpecs } from './countries/specs-all';
 
 /**
  * Validate BBAN
