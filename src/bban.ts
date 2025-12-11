@@ -14,7 +14,7 @@
  */
 'use strict';
 
-import { checkFormatBBAN } from './core/helpers';
+import { checkFormatBBAN } from './core/checksum';
 import { countrySpecs } from './countries/specs-all';
 
 /**

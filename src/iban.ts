@@ -14,7 +14,7 @@
  */
 'use strict';
 
-import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/helpers';
+import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/checksum';
 import { type ComposeIBANParams, type ExtractIBANResult, type ValidateIBANOptions, type ValidateIBANResult, ValidationErrorsIBAN } from './core/types';
 import { countrySpecs } from './countries/specs-all';
 import { electronicFormatIBAN } from './utils';

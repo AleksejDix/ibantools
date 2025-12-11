@@ -1,5 +1,5 @@
 import { MOD_97 } from './core/constants';
-import { mod9710 } from './core/helpers';
+import { mod9710 } from './core/checksum';
 
 const mod11CheckDigit = (remainder: number): number => {
   if (remainder === 0) {
