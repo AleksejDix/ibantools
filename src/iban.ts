@@ -21,6 +21,9 @@ import { electronicFormatIBAN } from './format';
 import { isValidBBAN } from './bban';
 import { MOD_97_REMAINDER } from './core/constants';
 
+const CHECKSUM_REGEX = /^[0-9]{2}$/;
+const QRIBAN_REGEX = /^3[0-1][0-9]{3}$/;
+
 /**
  * Validate IBAN
  * ```
@@ -45,7 +48,6 @@ export function isValidIBAN(iban: string | null | undefined, validationOptions: 
     return false;
   }
 
-  const reg = new RegExp('^[0-9]{2}$', '');
   const countryCode = iban.slice(0, 2);
   const spec = countrySpecs[countryCode];
 
@@ -55,7 +57,7 @@ export function isValidIBAN(iban: string | null | undefined, validationOptions: 
 
   return (
     spec.chars === iban.length &&
-    reg.test(iban.slice(2, 4)) &&
+    CHECKSUM_REGEX.test(iban.slice(2, 4)) &&
     isValidBBAN(iban.slice(4), countryCode) &&
     isValidIBANChecksum(iban) &&
     (validationOptions.allowQRIBAN || !isQRIBAN(iban))
@@ -102,8 +104,7 @@ export function validateIBAN(
       result.valid = false;
       result.errorCodes.push(ValidationErrorsIBAN.WrongAccountBankBranchChecksum);
     }
-    const reg = new RegExp('^[0-9]{2}$', '');
-    if (!reg.test(iban.slice(2, 4))) {
+    if (!CHECKSUM_REGEX.test(iban.slice(2, 4))) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsIBAN.ChecksumNotNumber);
     }
@@ -142,8 +143,7 @@ export function isQRIBAN(iban: string): boolean {
   if (!QRIBANCountries.includes(countryCode)) {
     return false;
   }
-  const reg = new RegExp('^3[0-1]{1}[0-9]{3}$', '');
-  return reg.test(iban.slice(4, 9));
+  return QRIBAN_REGEX.test(iban.slice(4, 9));
 }
 
 /**
