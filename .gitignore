@@ -1,15 +1,37 @@
+# Dependencies
 node_modules
-.tern-port
-.DS_Store
-.dir-locals.el
-.projectile
+
+# Build outputs
+dist
+docs
+
+# Test coverage
 coverage
 .nyc_output
-ghpages
-dist
-npm-debug.log
-.log
 test.lcov
-plans/
-dist/
-docs/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor/IDE
+.tern-port
+.dir-locals.el
+.projectile
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+ghpages

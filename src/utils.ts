@@ -1,0 +1,43 @@
+/**
+ * Get IBAN in electronic format (no spaces)
+ * IBAN validation is not performed.
+ * When non-string value for IBAN is provided, returns null.
+ * ```
+ * // returns "NL91ABNA0417164300"
+ * electronicFormatIBAN("NL91 ABNA 0417 1643 00");
+ * ```
+ */
+export function electronicFormatIBAN(iban?: string): string | null {
+  if (typeof iban !== 'string') {
+    return null;
+  }
+  return iban.replace(/[- ]/g, '').toUpperCase();
+}
+
+/**
+ * Get IBAN in friendly format (separated after every 4 characters)
+ * IBAN validation is not performed.
+ * When non-string value for IBAN is provided, returns null.
+ * ```
+ * // returns "NL91 ABNA 0417 1643 00"
+ * friendlyFormatIBAN("NL91ABNA0417164300");
+ * ```
+ * ```
+ * // returns "NL91-ABNA-0417-1643-00"
+ * friendlyFormatIBAN("NL91ABNA0417164300","-");
+ * ```
+ */
+export function friendlyFormatIBAN(iban?: string | null, separator?: string): string | null {
+  if (typeof iban !== 'string') {
+    return null;
+  }
+  if (separator === undefined || separator === null) {
+    separator = ' ';
+  }
+  const electronic_iban = electronicFormatIBAN(iban);
+  /* istanbul ignore if */
+  if (electronic_iban === null) {
+    return null;
+  }
+  return electronic_iban.replace(/(.{4})(?!$)/g, `$1${separator}`);
+}

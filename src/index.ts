@@ -18,167 +18,28 @@
  * @preferred
  */
 'use strict';
-
-import { checkBelgianBBAN, checkCroatianBBAN, checkCzechAndSlovakBBAN, checkEstonianBBAN, checkFrenchBBAN, checkHungarianBBAN, checkMod9710BBAN, checkNorwayBBAN, checkPolandBBAN, checkSpainBBAN } from './bban-validators';
-import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/helpers';
-import { MOD_97_REMAINDER } from './core/constants';
-// eslint-disable-next-line sort-imports
 import {
-  type ComposeIBANParams,
   type CountryMap,
   type CountryMapInternal,
-  type CountrySpec,
-  type ExtractBICResult,
-  type ExtractIBANResult,
-  type ValidateBICResult,
-  type ValidateIBANOptions,
-  type ValidateIBANResult,
-  ValidationErrorsBIC,
-  ValidationErrorsIBAN,
 } from './core/types';
 
-export { ValidationErrorsBIC, ValidationErrorsIBAN };
-export type { ComposeIBANParams, CountryMap, CountrySpec, ExtractBICResult, ExtractIBANResult, ValidateBICResult, ValidateIBANOptions, ValidateIBANResult };
+import { checkBelgianBBAN, checkCroatianBBAN, checkCzechAndSlovakBBAN, checkEstonianBBAN, checkFrenchBBAN, checkHungarianBBAN, checkMod9710BBAN, checkNorwayBBAN, checkPolandBBAN, checkSpainBBAN } from './bban-validators';
 
-/**
- * Validate IBAN
- * ```
- * // returns true
- * ibantools.isValidIBAN("NL91ABNA0417164300");
- * ```
- * ```
- * // returns false
- * ibantools.isValidIBAN("NL92ABNA0517164300");
- * ```
- * ```
- * // returns true
- * ibantools.isValidIBAN('CH4431999123000889012');
- * ```
- * ```
- * // returns false
- * ibantools.isValidIBAN('CH4431999123000889012', { allowQRIBAN: false });
- * ```
- */
-export function isValidIBAN(iban: string | null | undefined, validationOptions: ValidateIBANOptions = { allowQRIBAN: true }): boolean {
-  if (iban === undefined || iban === null) {
-    return false;
-  }
+// Re-export all public types
+export { ValidationErrorsBIC, ValidationErrorsIBAN } from './core/types';
+export type { ComposeIBANParams, CountryMap, CountrySpec, ExtractBICResult, ExtractIBANResult, ValidateBICResult, ValidateIBANOptions, ValidateIBANResult } from './core/types';
 
-  const reg = new RegExp('^[0-9]{2}$', '');
-  const countryCode = iban.slice(0, 2);
-  const spec = countrySpecs[countryCode];
+// Re-export utility functions
+export { electronicFormatIBAN, friendlyFormatIBAN } from './utils';
 
-  if (spec === undefined || spec.bban_regexp === undefined || spec.bban_regexp === null || spec.chars === undefined) {
-    return false;
-  }
+// Re-export IBAN functions
+export { isValidIBAN, validateIBAN, isQRIBAN, composeIBAN, extractIBAN } from './iban';
 
-  return (
-    spec.chars === iban.length &&
-    reg.test(iban.slice(2, 4)) &&
-    isValidBBAN(iban.slice(4), countryCode) &&
-    isValidIBANChecksum(iban) &&
-    (validationOptions.allowQRIBAN || !isQRIBAN(iban))
-  );
-}
+// Re-export BIC functions
+export { isValidBIC, validateBIC, extractBIC } from './bic';
 
-/**
- * validateIBAN
- * ```
- * // returns {errorCodes: [], valid: true}
- * ibantools.validateIBAN("NL91ABNA0417164300");
- * ```
- * ```
- * ```
- * // returns {errorCodes: [], valid: true}
- * ibantools.validateIBAN('CH4431999123000889012');
- * ```
- * ```
- * // returns {errorCodes: [7], valid: false}
- * ibantools.validateIBAN('CH4431999123000889012', { allowQRIBAN: false });
- * ```
- */
-export function validateIBAN(
-  iban?: string | null,
-  validationOptions: ValidateIBANOptions = { allowQRIBAN: true },
-): ValidateIBANResult {
-  const result = { errorCodes: [], valid: true } as ValidateIBANResult;
-  if (iban !== undefined && iban !== null && iban !== '') {
-    const spec = countrySpecs[iban.slice(0, 2)];
-    if (!spec || !(spec.bban_regexp || spec.chars)) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsIBAN.NoIBANCountry);
-      return result;
-    }
-    if (spec && spec.chars && spec.chars !== iban.length) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsIBAN.WrongBBANLength);
-    }
-    if (spec && spec.bban_regexp && !checkFormatBBAN(iban.slice(4), spec.bban_regexp)) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsIBAN.WrongBBANFormat);
-    }
-    if (spec && spec.bban_validation_func && !spec.bban_validation_func(iban.slice(4))) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsIBAN.WrongAccountBankBranchChecksum);
-    }
-    const reg = new RegExp('^[0-9]{2}$', '');
-    if (!reg.test(iban.slice(2, 4))) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsIBAN.ChecksumNotNumber);
-    }
-    if (result.errorCodes.includes(ValidationErrorsIBAN.WrongBBANFormat) || !isValidIBANChecksum(iban)) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsIBAN.WrongIBANChecksum);
-    }
-    if (!validationOptions.allowQRIBAN && isQRIBAN(iban)) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsIBAN.QRIBANNotAllowed);
-    }
-  } else {
-    result.valid = false;
-    result.errorCodes.push(ValidationErrorsIBAN.NoIBANProvided);
-  }
-  return result;
-}
-
-/**
- * Validate BBAN
- *
- * ```
- * // returns true
- * ibantools.isValidBBAN("ABNA0417164300", "NL");
- * ```
- * ```
- * // returns false
- * ibantools.isValidBBAN("A7NA0517164300", "NL");
- * ```
- */
-export function isValidBBAN(bban?: string | null, countryCode?: string | null): boolean {
-  if (bban === undefined || bban === null || countryCode === undefined || countryCode === null) {
-    return false;
-  }
-
-  const spec = countrySpecs[countryCode];
-
-  if (
-    spec === undefined ||
-    spec === null ||
-    spec.bban_regexp === undefined ||
-    spec.bban_regexp === null ||
-    spec.chars === undefined ||
-    spec.chars === null
-  ) {
-    return false;
-  }
-
-  if (spec.chars - 4 === bban.length && checkFormatBBAN(bban, spec.bban_regexp)) {
-    if (spec.bban_validation_func) {
-      return spec.bban_validation_func(bban.replace(/[\s.]+/g, ''));
-    }
-    return true;
-  }
-  return false;
-}
+// Re-export BBAN functions
+export { isValidBBAN } from './bban';
 
 /**
  * Validate if country code is from a SEPA country
@@ -199,144 +60,6 @@ export function isSEPACountry(countryCode: string): boolean {
     }
   }
   return false;
-}
-
-/**
- * Check if IBAN is QR-IBAN
- * ```
- * // returns true
- * ibantools.isQRIBAN("CH4431999123000889012");
- * ```
- * ```
- * // returns false
- * ibantools.isQRIBAN("NL92ABNA0517164300");
- * ```
- */
-export function isQRIBAN(iban: string): boolean {
-  if (iban === undefined || iban === null) {
-    return false;
-  }
-  const countryCode = iban.slice(0, 2);
-  const QRIBANCountries: string[] = ['LI', 'CH'];
-  if (!QRIBANCountries.includes(countryCode)) {
-    return false;
-  }
-  const reg = new RegExp('^3[0-1]{1}[0-9]{3}$', '');
-  return reg.test(iban.slice(4, 9));
-}
-
-/**
- * composeIBAN
- *
- * ```
- * // returns NL91ABNA0417164300
- * ibantools.composeIBAN({ countryCode: "NL", bban: "ABNA0417164300" });
- * ```
- */
-export function composeIBAN(params: ComposeIBANParams): string | null {
-  const formated_bban: string = electronicFormatIBAN(params.bban ?? undefined) || '';
-  if (params.countryCode === null || params.countryCode === undefined) {
-    return null;
-  }
-  const spec = countrySpecs[params.countryCode];
-  if (
-    formated_bban !== '' &&
-    spec !== undefined &&
-    spec.chars &&
-    spec.chars !== null &&
-    spec.chars === formated_bban.length + 4 &&
-    spec.bban_regexp &&
-    spec.bban_regexp !== null &&
-    checkFormatBBAN(formated_bban, spec.bban_regexp)
-  ) {
-    const checksom = mod9710Iban(`${params.countryCode}00${formated_bban}`);
-    return `${params.countryCode}${`0${MOD_97_REMAINDER - checksom}`.slice(-2)}${formated_bban}`;
-  }
-  return null;
-}
-
-/**
- * extractIBAN
- * ```
- * // returns {iban: "NL91ABNA0417164300", bban: "ABNA0417164300", countryCode: "NL", valid: true, accountNumber: '0417164300', bankIdentifier: 'ABNA'}
- * ibantools.extractIBAN("NL91 ABNA 0417 1643 00");
- * ```
- */
-export function extractIBAN(iban: string): ExtractIBANResult {
-  const eFormatIBAN: string | null = electronicFormatIBAN(iban);
-  const result: ExtractIBANResult = {
-    iban: eFormatIBAN || iban,
-    valid: false,
-  };
-  if (!!eFormatIBAN && isValidIBAN(eFormatIBAN)) {
-    result.bban = eFormatIBAN.slice(4);
-    result.countryCode = eFormatIBAN.slice(0, 2);
-    result.valid = true;
-    const spec = countrySpecs[result.countryCode];
-    if (spec?.account_indentifier) {
-      const [start, end] = spec.account_indentifier.split('-');
-      if (start && end) {
-        result.accountNumber = result.iban.slice(parseInt(start, 10), parseInt(end, 10) + 1);
-      }
-    }
-    if (spec?.bank_identifier) {
-      const [start, end] = spec.bank_identifier.split('-');
-      if (start && end) {
-        result.bankIdentifier = result.bban.slice(parseInt(start, 10), parseInt(end, 10) + 1);
-      }
-    }
-    if (spec?.branch_indentifier) {
-      const [start, end] = spec.branch_indentifier.split('-');
-      if (start && end) {
-        result.branchIdentifier = result.bban.slice(parseInt(start, 10), parseInt(end, 10) + 1);
-      }
-    }
-  }
-  return result;
-}
-
-/**
- * Get IBAN in electronic format (no spaces)
- * IBAN validation is not performed.
- * When non-string value for IBAN is provided, returns null.
- * ```
- * // returns "NL91ABNA0417164300"
- * ibantools.electronicFormatIBAN("NL91 ABNA 0417 1643 00");
- * ```
- */
-export function electronicFormatIBAN(iban?: string): string | null {
-  if (typeof iban !== 'string') {
-    return null;
-  }
-  return iban.replace(/[- ]/g, '').toUpperCase();
-}
-
-/**
- * Get IBAN in friendly format (separated after every 4 characters)
- * IBAN validation is not performed.
- * When non-string value for IBAN is provided, returns null.
- * ```
- * // returns "NL91 ABNA 0417 1643 00"
- * ibantools.friendlyFormatIBAN("NL91ABNA0417164300");
- * ```
- * ```
- * // returns "NL91-ABNA-0417-1643-00"
- * ibantools.friendlyFormatIBAN("NL91ABNA0417164300","-");
- * ```
- */
-export function friendlyFormatIBAN(iban?: string | null, separator?: string): string | null {
-  if (typeof iban !== 'string') {
-    return null;
-  }
-  if (separator === undefined || separator === null) {
-    separator = ' ';
-  }
-  const electronic_iban = electronicFormatIBAN(iban);
-  /* istanbul ignore if */
-  if (electronic_iban === null) {
-    return null;
-  }
-  return electronic_iban.replace(/(.{4})(?!$)/g, `$1${separator}`);
 }
 
 /**
@@ -365,86 +88,6 @@ export function getCountrySpecifications(): CountryMap {
   }
 
   return countyMap;
-}
-
-/**
- * Validate BIC/SWIFT
- *
- * ```
- * // returns true
- * ibantools.isValidBIC("ABNANL2A");
- *
- * // returns true
- * ibantools.isValidBIC("NEDSZAJJXXX");
- *
- * // returns false
- * ibantools.isValidBIC("ABN4NL2A");
- *
- * // returns false
- * ibantools.isValidBIC("ABNA NL 2A");
- * ```
- */
-export function isValidBIC(bic: string | null | undefined): boolean {
-  if (!bic) {
-    return false;
-  }
-  const reg = new RegExp('^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$', '');
-  const spec = countrySpecs[bic.toUpperCase().slice(4, 6)];
-  return reg.test(bic) && spec !== undefined;
-}
-
-/**
- * BIC validation errors
- */
-/**
- * validateBIC
- * ```
- * // returns {errorCodes: [], valid: true}
- * ibantools.validateBIC("NEDSZAJJXXX");
- * ```
- */
-export function validateBIC(bic?: string | null): ValidateBICResult {
-  const result = { errorCodes: [], valid: true } as ValidateBICResult;
-  if (bic !== undefined && bic !== null && bic !== '') {
-    const spec = countrySpecs[bic.toUpperCase().slice(4, 6)];
-    if (spec === undefined) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsBIC.NoBICCountry);
-    } else {
-      const reg = new RegExp('^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$', '');
-      if (!reg.test(bic)) {
-        result.valid = false;
-        result.errorCodes.push(ValidationErrorsBIC.WrongBICFormat);
-      }
-    }
-  } else {
-    result.valid = false;
-    result.errorCodes.push(ValidationErrorsBIC.NoBICProvided);
-  }
-  return result;
-}
-
-/**
- * extractBIC
- * ```
- * // returns {bankCode: "ABNA", countryCode: "NL", locationCode: "2A", branchCode: null, testBIC: false, valid: true}
- * ibantools.extractBIC("ABNANL2A");
- * ```
- */
-export function extractBIC(inputBic: string): ExtractBICResult {
-  const result = {} as ExtractBICResult;
-  const bic = inputBic.toUpperCase();
-  if (isValidBIC(bic)) {
-    result.bankCode = bic.slice(0, 4);
-    result.countryCode = bic.slice(4, 6);
-    result.locationCode = bic.slice(6, 8);
-    result.testBIC = result.locationCode[1] === '0';
-    result.branchCode = bic.length > 8 ? bic.slice(8) : null;
-    result.valid = true;
-  } else {
-    result.valid = false;
-  }
-  return result;
 }
 
 /**
