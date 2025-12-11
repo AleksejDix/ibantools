@@ -14,12 +14,12 @@
  */
 'use strict';
 
-import { isValidBBAN } from './bban';
-import { MOD_97_REMAINDER } from './core/constants';
-import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/helpers';
 import { type ComposeIBANParams, type ExtractIBANResult, type ValidateIBANOptions, type ValidateIBANResult, ValidationErrorsIBAN } from './core/types';
+import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/helpers';
+import { MOD_97_REMAINDER } from './core/constants';
 import { countrySpecs } from './index';
 import { electronicFormatIBAN } from './utils';
+import { isValidBBAN } from './bban';
 
 /**
  * Validate IBAN
