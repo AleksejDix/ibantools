@@ -1,0 +1,3 @@
+# Default owner for everything in the repo.
+# This user is automatically requested for review on all pull requests.
+*       @aleksejdix

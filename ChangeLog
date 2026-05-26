@@ -1,3 +1,15 @@
+2026-05-26  Aleksej Dix
+	* Updated all dependencies to latest (oxlint 1.67, vitest 4.1.7, typedoc 0.28.19)
+	* Upgraded to TypeScript 6.0.3 and Vite 8.0.14 (major version bumps)
+	* Fixed 18 npm audit vulnerabilities (1 low, 10 moderate, 7 high) in dev dependencies
+	* Removed vite-plugin-dts; .d.ts files now emitted via tsc (drops @microsoft/api-extractor and ajv chain)
+	* Replaced prettier with oxfmt (Rust-based formatter, OXC family)
+	* Cleaned up all lint warnings: added /u flag to all regexes, switched to nullish coalescing, readonly parameter types
+	* Added explicit rootDir to tsconfig (required by TS 6 and oxlint 1.67)
+	* Added Aleksej Dix to LICENSE.MIT and per-file copyright headers
+	* Added .github/CODEOWNERS
+	* Updated SECURITY.md with full reporting policy
+
 2025-12-10  Aleksej Dix <git@aleksejdix.com>
 	* Replaced ValidationErrorsIBAN and ValidationErrorsBIC enums with const objects
 	* Replaced TypeScript CLI build with Vite 7.2.7 (ESM only output)
