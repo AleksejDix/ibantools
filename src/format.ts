@@ -11,7 +11,7 @@ export function electronicFormatIBAN(iban?: string): string | null {
   if (typeof iban !== 'string') {
     return null;
   }
-  return iban.replace(/[- ]/g, '').toUpperCase();
+  return iban.replace(/[- ]/gu, '').toUpperCase();
 }
 
 /**
@@ -31,13 +31,11 @@ export function friendlyFormatIBAN(iban?: string | null, separator?: string): st
   if (typeof iban !== 'string') {
     return null;
   }
-  if (separator === undefined || separator === null) {
-    separator = ' ';
-  }
+  separator ??= ' ';
   const electronic_iban = electronicFormatIBAN(iban);
   /* istanbul ignore if */
   if (electronic_iban === null) {
     return null;
   }
-  return electronic_iban.replace(/(.{4})(?!$)/g, `$1${separator}`);
+  return electronic_iban.replace(/(.{4})(?!$)/gu, `$1${separator}`);
 }

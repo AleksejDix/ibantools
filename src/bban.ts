@@ -1,10 +1,11 @@
 /*!
  * @license
  * Copyright Saša Jovanić
+ * Copyright Aleksej Dix
  * Licensed under the Mozilla Public License, Version 2.0 or the MIT license,
  * at your option. This file may not be copied, modified, or distributed
  * except according to those terms.
- * SPDX-FileCopyrightText: Saša Jovanić
+ * SPDX-FileCopyrightText: Saša Jovanić, Aleksej Dix
  * SPDX-License-Identifier: MIT or MPL/2.0
  */
 

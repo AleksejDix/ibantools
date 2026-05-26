@@ -1,10 +1,11 @@
 /*!
  * @license
  * Copyright Saša Jovanić
+ * Copyright Aleksej Dix
  * Licensed under the Mozilla Public License, Version 2.0 or the MIT license,
  * at your option. This file may not be copied, modified, or distributed
  * except according to those terms.
- * SPDX-FileCopyrightText: Saša Jovanić
+ * SPDX-FileCopyrightText: Saša Jovanić, Aleksej Dix
  * SPDX-License-Identifier: MIT or MPL/2.0
  */
 
@@ -17,7 +18,7 @@
 import { type ExtractBICResult, type ValidateBICResult, ValidationErrorsBIC } from './core/types';
 import { countrySpecs } from './countries/specs';
 
-const BIC_REGEX = /^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$/;
+const BIC_REGEX = /^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$/u;
 
 /**
  * Validate BIC/SWIFT
@@ -61,11 +62,9 @@ export function validateBIC(bic?: string | null): ValidateBICResult {
     if (spec === undefined) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsBIC.NoBICCountry);
-    } else {
-      if (!BIC_REGEX.test(bic)) {
-        result.valid = false;
-        result.errorCodes.push(ValidationErrorsBIC.WrongBICFormat);
-      }
+    } else if (!BIC_REGEX.test(bic)) {
+      result.valid = false;
+      result.errorCodes.push(ValidationErrorsBIC.WrongBICFormat);
     }
   } else {
     result.valid = false;

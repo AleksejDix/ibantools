@@ -1,10 +1,11 @@
 /*!
  * @license
  * Copyright Saša Jovanić
+ * Copyright Aleksej Dix
  * Licensed under the Mozilla Public License, Version 2.0 or the MIT license,
  * at your option. This file may not be copied, modified, or distributed
  * except according to those terms.
- * SPDX-FileCopyrightText: Saša Jovanić
+ * SPDX-FileCopyrightText: Saša Jovanić, Aleksej Dix
  * SPDX-License-Identifier: MIT or MPL/2.0
  */
 
@@ -14,15 +15,21 @@
  */
 'use strict';
 
+import {
+  type ComposeIBANParams,
+  type ExtractIBANResult,
+  type ValidateIBANOptions,
+  type ValidateIBANResult,
+  ValidationErrorsIBAN,
+} from './core/types';
 import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/checksum';
-import { type ComposeIBANParams, type ExtractIBANResult, type ValidateIBANOptions, type ValidateIBANResult, ValidationErrorsIBAN } from './core/types';
+import { MOD_97_REMAINDER } from './core/constants';
 import { countrySpecs } from './countries/specs';
 import { electronicFormatIBAN } from './format';
 import { isValidBBAN } from './bban';
-import { MOD_97_REMAINDER } from './core/constants';
 
-const CHECKSUM_REGEX = /^[0-9]{2}$/;
-const QRIBAN_REGEX = /^3[0-1][0-9]{3}$/;
+const CHECKSUM_REGEX = /^[0-9]{2}$/u;
+const QRIBAN_REGEX = /^3[0-1][0-9]{3}$/u;
 
 /**
  * Validate IBAN
@@ -43,7 +50,10 @@ const QRIBAN_REGEX = /^3[0-1][0-9]{3}$/;
  * ibantools.isValidIBAN('CH4431999123000889012', { allowQRIBAN: false });
  * ```
  */
-export function isValidIBAN(iban: string | null | undefined, validationOptions: ValidateIBANOptions = { allowQRIBAN: true }): boolean {
+export function isValidIBAN(
+  iban: string | null | undefined,
+  validationOptions: Readonly<ValidateIBANOptions> = { allowQRIBAN: true },
+): boolean {
   if (iban === undefined || iban === null) {
     return false;
   }
@@ -82,7 +92,7 @@ export function isValidIBAN(iban: string | null | undefined, validationOptions: 
  */
 export function validateIBAN(
   iban?: string | null,
-  validationOptions: ValidateIBANOptions = { allowQRIBAN: true },
+  validationOptions: Readonly<ValidateIBANOptions> = { allowQRIBAN: true },
 ): ValidateIBANResult {
   const result = { errorCodes: [], valid: true } as ValidateIBANResult;
   if (iban !== undefined && iban !== null && iban !== '') {
@@ -154,8 +164,8 @@ export function isQRIBAN(iban: string): boolean {
  * ibantools.composeIBAN({ countryCode: "NL", bban: "ABNA0417164300" });
  * ```
  */
-export function composeIBAN(params: ComposeIBANParams): string | null {
-  const formated_bban: string = electronicFormatIBAN(params.bban ?? undefined) || '';
+export function composeIBAN(params: Readonly<ComposeIBANParams>): string | null {
+  const formated_bban: string = electronicFormatIBAN(params.bban ?? undefined) ?? '';
   if (params.countryCode === null || params.countryCode === undefined) {
     return null;
   }
@@ -186,10 +196,10 @@ export function composeIBAN(params: ComposeIBANParams): string | null {
 export function extractIBAN(iban: string): ExtractIBANResult {
   const eFormatIBAN: string | null = electronicFormatIBAN(iban);
   const result: ExtractIBANResult = {
-    iban: eFormatIBAN || iban,
+    iban: eFormatIBAN ?? iban,
     valid: false,
   };
-  if (!!eFormatIBAN && isValidIBAN(eFormatIBAN)) {
+  if (eFormatIBAN !== null && isValidIBAN(eFormatIBAN)) {
     result.bban = eFormatIBAN.slice(4);
     result.countryCode = eFormatIBAN.slice(0, 2);
     result.valid = true;

@@ -23,7 +23,7 @@ export function isSEPACountry(countryCode: string): boolean {
   if (countryCode !== undefined && countryCode !== null) {
     const spec = countrySpecs[countryCode];
     if (spec !== undefined) {
-      return spec.SEPA ? spec.SEPA : false;
+      return spec.SEPA ?? false;
     }
   }
   return false;
@@ -47,10 +47,10 @@ export function getCountrySpecifications(): CountryMap {
   const countyMap: CountryMap = {};
   for (const [countyCode, county] of Object.entries(countrySpecs)) {
     countyMap[countyCode] = {
-      chars: county.chars || null,
-      bban_regexp: county.bban_regexp || null,
-      IBANRegistry: county.IBANRegistry || false,
-      SEPA: county.SEPA || false,
+      chars: county.chars ?? null,
+      bban_regexp: county.bban_regexp ?? null,
+      IBANRegistry: county.IBANRegistry ?? false,
+      SEPA: county.SEPA ?? false,
     };
   }
 

@@ -1,5 +1,5 @@
-import { MOD_97 } from './core/constants';
 import { mod9710, stripSpacesAndPeriods, weightedSum } from './core/checksum';
+import { MOD_97 } from './core/constants';
 
 const mod11CheckDigit = (remainder: number): number => {
   if (remainder === 0) {

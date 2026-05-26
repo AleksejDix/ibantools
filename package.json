@@ -31,29 +31,36 @@
   },
   "bugs": "https://github.com/Simplify/ibantools/issues",
   "scripts": {
-    "build": "vite build",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && vite build",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "lint": "oxlint --type-aware src/ test/",
+    "format": "oxfmt src/ test/",
+    "format:check": "oxfmt --check src/ test/",
     "prepare": "npm run build",
     "docs": "typedoc src/index.ts",
-    "all": "npm run test && npm run lint && npm run docs"
+    "all": "npm run test && npm run lint && npm run format:check && npm run docs"
   },
   "author": {
-    "name": "Saša Jovanić",
-    "url": "https://www.simplify.ba/"
+    "name": "Aleksej Dix",
+    "email": "privat@aleksejdix.com"
   },
+  "contributors": [
+    {
+      "name": "Saša Jovanić",
+      "url": "https://www.simplify.ba/"
+    }
+  ],
   "license": "MIT or MPL-2.0",
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.0.15",
-    "oxlint": "^1.32.0",
-    "oxlint-tsgolint": "^0.8.4",
-    "prettier": "^3.0.3",
-    "typedoc": "^0.28.15",
-    "typescript": "^5.9.3",
-    "vite": "^7.2.7",
-    "vite-plugin-dts": "4.5.4",
-    "vitest": "^4.0.15"
+    "@vitest/coverage-v8": "^4.1.7",
+    "oxfmt": "^0.52.0",
+    "oxlint": "^1.67.0",
+    "oxlint-tsgolint": "^0.23.0",
+    "typedoc": "^0.28.19",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.14",
+    "vitest": "^4.1.7"
   }
 }

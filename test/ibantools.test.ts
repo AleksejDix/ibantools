@@ -902,17 +902,13 @@ describe('IBANTools', () => {
 
   describe('When calling electronicFormatIBAN()', () => {
     it('with valid Brazilian IBAN should return BR9700360305000010009795493P1', () => {
-      expect(iban.electronicFormatIBAN('BR97 0036 0305 0000 1000 9795 493P 1')).toBe(
-        'BR9700360305000010009795493P1',
-      );
+      expect(iban.electronicFormatIBAN('BR97 0036 0305 0000 1000 9795 493P 1')).toBe('BR9700360305000010009795493P1');
     });
   });
 
   describe('When calling friendlyFormatIBAN()', () => {
     it('with valid badly formated Brazilian IBAN should return BR97 0036 0305 0000 1000 9795 493P 1', () => {
-      expect(iban.friendlyFormatIBAN('BR97 0036-030500001000-9795493-P1')).toBe(
-        'BR97 0036 0305 0000 1000 9795 493P 1',
-      );
+      expect(iban.friendlyFormatIBAN('BR97 0036-030500001000-9795493-P1')).toBe('BR97 0036 0305 0000 1000 9795 493P 1');
     });
   });
 
@@ -938,7 +934,7 @@ describe('IBANTools', () => {
 
   describe('Adding country specification allows us to use it', () => {
     it('Adds and uses country code XX', () => {
-      iban.countrySpecs['XX'] = { chars: 24, bban_regexp: '^[0-9]{8}[A-Z0-9]{12}$', IBANRegistry: true };
+      iban.countrySpecs.XX = { chars: 24, bban_regexp: '^[0-9]{8}[A-Z0-9]{12}$', IBANRegistry: true };
       const ext = iban.getCountrySpecifications();
       expect(ext.XX.chars).toBe(24);
       expect(ext.XX.bban_regexp).toBe('^[0-9]{8}[A-Z0-9]{12}$');
