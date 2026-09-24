@@ -1,5 +1,7 @@
 import * as iban from '../src/index';
 import { describe, expect, it } from 'vitest';
+import { COUNTRY_CODES } from '../src/countries/codes';
+import { ibanSpecs } from '../src/countries/specs';
 import { mod9710 } from '../src/core/checksum';
 
 describe('IBANTools', () => {
@@ -942,6 +944,12 @@ describe('IBANTools', () => {
       expect(ext.bankIdentifier).toBe('01');
       expect(ext.branchIdentifier).toBe('59');
       expect(ext.accountNumber).toBe('260076545510730339');
+    });
+  });
+
+  describe('Country code list', () => {
+    it.each(Object.keys(ibanSpecs))('should contain IBAN country %s', (code) => {
+      expect(COUNTRY_CODES.has(code)).toBe(true);
     });
   });
 

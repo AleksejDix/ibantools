@@ -1,5 +1,6 @@
 import { type CountryMap } from '../core/types';
-import { countrySpecs } from './specs';
+import { countrySpecs } from './all';
+import { ibanSpecs } from './specs';
 
 /**
  * Validate if country code is from a SEPA country
@@ -14,7 +15,7 @@ import { countrySpecs } from './specs';
  */
 export function isSEPACountry(countryCode: string): boolean {
   if (countryCode !== undefined && countryCode !== null) {
-    const spec = countrySpecs[countryCode];
+    const spec = ibanSpecs[countryCode];
     if (spec !== undefined) {
       return spec.SEPA ?? false;
     }

@@ -5,7 +5,7 @@
 'use strict';
 
 import { checkFormatBBAN, stripSpacesAndPeriods } from './core/checksum';
-import { countrySpecs } from './countries/specs';
+import { ibanSpecs } from './countries/specs';
 
 /**
  * Validate BBAN
@@ -24,7 +24,7 @@ export function isValidBBAN(bban: string | null | undefined, countryCode: string
     return false;
   }
 
-  const spec = countrySpecs[countryCode];
+  const spec = ibanSpecs[countryCode];
 
   if (
     spec === undefined ||

@@ -13,8 +13,8 @@ import {
 } from './core/types';
 import { checkFormatBBAN, isValidIBANChecksum, mod9710Iban } from './core/checksum';
 import { MOD_97_REMAINDER } from './core/constants';
-import { countrySpecs } from './countries/specs';
 import { electronicFormatIBAN } from './format';
+import { ibanSpecs } from './countries/specs';
 import { isValidBBAN } from './bban';
 
 const CHECKSUM_REGEX = /^[0-9]{2}$/u;
@@ -48,7 +48,7 @@ export function isValidIBAN(
   }
 
   const countryCode = iban.slice(0, 2);
-  const spec = countrySpecs[countryCode];
+  const spec = ibanSpecs[countryCode];
 
   if (spec === undefined || spec.bban_regexp === undefined || spec.bban_regexp === null || spec.chars === undefined) {
     return false;
@@ -85,7 +85,7 @@ export function validateIBAN(
 ): ValidateIBANResult {
   const result = { errorCodes: [], valid: true } as ValidateIBANResult;
   if (iban !== undefined && iban !== null && iban !== '') {
-    const spec = countrySpecs[iban.slice(0, 2)];
+    const spec = ibanSpecs[iban.slice(0, 2)];
     if (!spec || !(spec.bban_regexp || spec.chars)) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsIBAN.NoIBANCountry);
@@ -158,7 +158,7 @@ export function composeIBAN(params: Readonly<ComposeIBANParams>): string | null 
   if (params.countryCode === null || params.countryCode === undefined) {
     return null;
   }
-  const spec = countrySpecs[params.countryCode];
+  const spec = ibanSpecs[params.countryCode];
   if (
     formated_bban !== '' &&
     spec !== undefined &&
@@ -193,7 +193,7 @@ export function extractIBAN(iban: string): ExtractIBANResult {
     result.bban = eFormatIBAN.slice(4);
     result.countryCode = eFormatIBAN.slice(0, 2);
     result.valid = true;
-    const spec = countrySpecs[result.countryCode];
+    const spec = ibanSpecs[result.countryCode];
     if (spec?.account_indentifier) {
       const [start, end] = spec.account_indentifier.split('-');
       if (start && end) {
