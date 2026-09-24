@@ -693,6 +693,12 @@ describe('IBANTools', () => {
     it('without country codeshould return null', () => {
       expect(iban.composeIBAN({ bban: 'ABNA04171643000' })).toBeNull();
     });
+    it('with BBAN failing country checksum should return null', () => {
+      expect(iban.composeIBAN({ countryCode: 'NO', bban: '86011117948' })).toBeNull();
+    });
+    it('with BBAN passing country checksum should return IBAN', () => {
+      expect(iban.composeIBAN({ countryCode: 'NO', bban: '86011117947' })).toBe('NO9386011117947');
+    });
     it('with valid country code and no BBAN should return null', () => {
       expect(iban.composeIBAN({ countryCode: 'NL', bban: null })).toBeNull();
     });
