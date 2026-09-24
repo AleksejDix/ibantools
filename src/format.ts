@@ -37,5 +37,5 @@ export function friendlyFormatIBAN(iban?: string | null, separator?: string): st
   if (electronic_iban === null) {
     return null;
   }
-  return electronic_iban.replace(/(.{4})(?!$)/gu, `$1${separator}`);
+  return electronic_iban.replace(/(.{4})(?!$)/gu, (group) => `${group}${separator}`);
 }
