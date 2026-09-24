@@ -1,22 +1,10 @@
-/*!
- * @license
- * Copyright Saša Jovanić
- * Copyright Aleksej Dix
- * Licensed under the Mozilla Public License, Version 2.0 or the MIT license,
- * at your option. This file may not be copied, modified, or distributed
- * except according to those terms.
- * SPDX-FileCopyrightText: Saša Jovanić, Aleksej Dix
- * SPDX-License-Identifier: MIT or MPL/2.0
- */
-
 /**
  * Validation, extraction and creation of IBAN, BBAN, BIC/SWIFT numbers plus some other helpful stuff
  * @package Documentation
- * @author Saša Jovanić
  * @author Aleksej Dix
  * @module ibantools
  * @version 4.5.1
- * @license MIT or MPL-2.0
+ * @license MIT
  * @preferred
  */
 'use strict';

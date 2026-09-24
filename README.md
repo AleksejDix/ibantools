@@ -1,25 +1,24 @@
 # IBANTools
 
 ![License](https://img.shields.io/badge/License-MIT-blue)
-![License](https://img.shields.io/badge/License-MPL_2.0-blue)
 
 [![npm version](https://badge.fury.io/js/ibantools.svg)](https://badge.fury.io/js/ibantools)
 [![NPM downloads](https://img.shields.io/npm/dw/ibantools)](https://www.npmjs.com/package/ibantools)
 ![Dependents (via libraries.io)](https://img.shields.io/librariesio/dependents/npm/ibantools)
 
-![Build CI](https://github.com/Simplify/ibantools/workflows/Build%20CI%20(Master)/badge.svg?branch=master)
-![ESLint & Prettier CI](https://github.com/Simplify/ibantools/workflows/ESLint%20&%20Prettier/badge.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/Simplify/ibantools/badge.svg?branch=master)](https://coveralls.io/github/Simplify/ibantools?branch=master)
+![Build CI](https://github.com/AleksejDix/ibantools/workflows/Build%20CI%20(Master)/badge.svg?branch=master)
+![ESLint & Prettier CI](https://github.com/AleksejDix/ibantools/workflows/ESLint%20&%20Prettier/badge.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/AleksejDix/ibantools/badge.svg?branch=master)](https://coveralls.io/github/AleksejDix/ibantools?branch=master)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/Simplify/IBANtools)
-![GitHub contributors](https://img.shields.io/github/contributors/Simplify/IBANTools)
-![GitHub issues](https://img.shields.io/github/issues/Simplify/ibantools)
-![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/Simplify/ibantools)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Simplify/ibantools)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Simplify/IBANTools)
+![GitHub last commit](https://img.shields.io/github/last-commit/AleksejDix/ibantools)
+![GitHub contributors](https://img.shields.io/github/contributors/AleksejDix/ibantools)
+![GitHub issues](https://img.shields.io/github/issues/AleksejDix/ibantools)
+![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/AleksejDix/ibantools)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/AleksejDix/ibantools)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/AleksejDix/ibantools)
 
 ![No deps](https://img.shields.io/badge/dependencies-0-brightgreen)
-![dev deps](https://img.shields.io/librariesio/github/Simplify/IBANTools?label=devDependencies)
+![dev deps](https://img.shields.io/librariesio/github/AleksejDix/ibantools?label=devDependencies)
 
 ## About
 
@@ -88,15 +87,16 @@ setCountryBBANValidation('DE', isValidBBAN);
 
 ## Contributing
 
-This project adheres to the Contributor Covenant [code of conduct](https://github.com/Simplify/ibantools/blob/master/.github/CODE_OF_CONDUCT.md).
+This project adheres to the Contributor Covenant [code of conduct](https://github.com/AleksejDix/ibantools/blob/master/.github/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code.
 
-For contribution details, please read [this document](https://github.com/Simplify/ibantools/blob/master/CONTRIBUTING.md).
+For contribution details, please read [this document](https://github.com/AleksejDix/ibantools/blob/master/CONTRIBUTING.md).
 
 ## License
 
-This work is dual-licensed under MIT and MPL-2.0.
-You can choose between one of them if you use this work.
+This work is licensed under MIT.
 
-`SPDX-License-Identifier: MIT OR MPL-2.0`
+`SPDX-License-Identifier: MIT`
+
+Inspired by [ibantools](https://github.com/Simplify/ibantools) by Saša Jovanić.
 
