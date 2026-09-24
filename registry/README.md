@@ -52,7 +52,6 @@ The parser generates `script/iban_spec.js` with:
 | `SEPA` | SEPA membership status |
 | `bank_identifier` | Bank ID position (0-based) |
 | `branch_indentifier` | Branch ID position (0-based, if applicable) |
-| `account_indentifier` | Account position (derived from domestic example) |
 
 ## TXT File Format
 
