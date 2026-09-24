@@ -6,7 +6,7 @@ export default defineConfig({
       entry: 'src/index.ts',
       formats: ['es'],
     },
-    minify: 'esbuild',
+    minify: true,
     sourcemap: true,
     outDir: 'dist',
     emptyOutDir: false,
