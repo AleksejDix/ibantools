@@ -577,6 +577,9 @@ describe('IBANTools', () => {
     it('with valid country code NL should return true', () => {
       expect(iban.isSEPACountry('NL')).toBe(true);
     });
+    it('with undefined country code should return false', () => {
+      expect(iban.isSEPACountry(undefined as unknown as string)).toBe(false);
+    });
     it('with valid country code PK return false', () => {
       expect(iban.isSEPACountry('PK')).toBe(false);
     });
@@ -659,6 +662,9 @@ describe('IBANTools', () => {
   });
 
   describe('When calling isValidBBAN()', () => {
+    it('with HU BBAN with wrong bank-branch check digit should return false', () => {
+      expect(iban.isValidBBAN('117730171111101800000000', 'HU')).toBe(false);
+    });
     it('with CZ BBAN whose prefix check digit is 1 for remainder 1 should return false', () => {
       expect(iban.isValidBBAN('08000000610000000000', 'CZ')).toBe(false);
     });
@@ -1070,6 +1076,9 @@ describe('IBANTools', () => {
   });
 
   describe('isQRIBAN', () => {
+    it('should return false for null', () => {
+      expect(iban.isQRIBAN(null as unknown as string)).toBe(false);
+    });
     it('should return true', () => {
       expect(iban.isQRIBAN('CH4431999123000889012')).toBe(true);
     });
