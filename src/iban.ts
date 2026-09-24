@@ -110,7 +110,7 @@ export function validateIBAN(
       result.valid = false;
       result.errorCodes.push(ValidationErrorsIBAN.WrongBBANFormat);
     }
-    if (spec && spec.bban_validation_func && !spec.bban_validation_func(iban.slice(4))) {
+    if (result.valid && spec.bban_validation_func && !spec.bban_validation_func(iban.slice(4))) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsIBAN.WrongAccountBankBranchChecksum);
     }

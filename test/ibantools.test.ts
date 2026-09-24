@@ -6,6 +6,7 @@
 
 import * as iban from '../src/index';
 import { describe, expect, it } from 'vitest';
+import { mod9710 } from '../src/core/checksum';
 
 describe('IBANTools', () => {
   describe('When calling isValidIBAN()', () => {
@@ -365,7 +366,6 @@ describe('IBANTools', () => {
         errorCodes: [
           iban.ValidationErrorsIBAN.WrongBBANLength,
           iban.ValidationErrorsIBAN.WrongBBANFormat,
-          iban.ValidationErrorsIBAN.WrongAccountBankBranchChecksum,
           iban.ValidationErrorsIBAN.WrongIBANChecksum,
         ],
       });
@@ -377,7 +377,6 @@ describe('IBANTools', () => {
         errorCodes: [
           iban.ValidationErrorsIBAN.WrongBBANLength,
           iban.ValidationErrorsIBAN.WrongBBANFormat,
-          iban.ValidationErrorsIBAN.WrongAccountBankBranchChecksum,
           iban.ValidationErrorsIBAN.WrongIBANChecksum,
         ],
       });
@@ -456,6 +455,21 @@ describe('IBANTools', () => {
 
     it('with valid Somalian IBAN should return true', () => {
       expect(iban.validateIBAN('SO061000001123123456789')).toEqual({ valid: true, errorCodes: [] });
+    });
+  });
+
+  describe('When calling validateIBAN() with CZ IBAN failing account checksum', () => {
+    it('should return account checksum error', () => {
+      expect(iban.validateIBAN('CZ6208000000610000000000')).toEqual({
+        valid: false,
+        errorCodes: [iban.ValidationErrorsIBAN.WrongAccountBankBranchChecksum],
+      });
+    });
+  });
+
+  describe('When calling mod9710() with non-numeric input', () => {
+    it('should return NaN', () => {
+      expect(mod9710('AB1234')).toBeNaN();
     });
   });
 
