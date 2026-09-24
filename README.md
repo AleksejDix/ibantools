@@ -6,9 +6,7 @@
 [![NPM downloads](https://img.shields.io/npm/dw/ibantools)](https://www.npmjs.com/package/ibantools)
 ![Dependents (via libraries.io)](https://img.shields.io/librariesio/dependents/npm/ibantools)
 
-![Build CI](https://github.com/AleksejDix/ibantools/workflows/Build%20CI%20(Master)/badge.svg?branch=master)
-![ESLint & Prettier CI](https://github.com/AleksejDix/ibantools/workflows/ESLint%20&%20Prettier/badge.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/AleksejDix/ibantools/badge.svg?branch=master)](https://coveralls.io/github/AleksejDix/ibantools?branch=master)
+[![CI](https://github.com/AleksejDix/ibantools/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/AleksejDix/ibantools/actions/workflows/ci.yml)
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/AleksejDix/ibantools)
 ![GitHub contributors](https://img.shields.io/github/contributors/AleksejDix/ibantools)
