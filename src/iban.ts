@@ -178,7 +178,8 @@ export function composeIBAN(params: Readonly<ComposeIBANParams>): string | null 
     spec.chars === formated_bban.length + 4 &&
     spec.bban_regexp &&
     spec.bban_regexp !== null &&
-    checkFormatBBAN(formated_bban, spec.bban_regexp)
+    checkFormatBBAN(formated_bban, spec.bban_regexp) &&
+    (!spec.bban_validation_func || spec.bban_validation_func(formated_bban))
   ) {
     const checksom = mod9710Iban(`${params.countryCode}00${formated_bban}`);
     return `${params.countryCode}${`0${MOD_97_REMAINDER - checksom}`.slice(-2)}${formated_bban}`;
