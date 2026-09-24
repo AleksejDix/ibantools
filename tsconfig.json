@@ -18,8 +18,25 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "isolatedModules": true,
+    "isolatedDeclarations": true,
+    "erasableSyntaxOnly": true,
+    "noUncheckedSideEffectImports": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "test"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test"
+  ]
 }

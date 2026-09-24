@@ -18,6 +18,7 @@
     "max-lines-per-function": "off",
     "max-lines": "off",
     "max-statements": "off",
-    "capitalized-comments": "off"
+    "capitalized-comments": "off",
+    "@typescript-eslint/dot-notation": ["warn", { "allowIndexSignaturePropertyAccess": true }]
   }
 }
