@@ -1,9 +1,3 @@
-/* Licensed under the Mozilla Public License, Version 2.0 or the MIT license,
- * at your option. This file may not be copied, modified, or distributed
- * except according to those terms.
- * SPDX-FileCopyrightText: Saša Jovanić
- * SPDX-License-Identifier: MIT or MPL/2.0 */
-
 import * as iban from '../src/index';
 import { describe, expect, it } from 'vitest';
 import { mod9710 } from '../src/core/checksum';

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-IBANTools is a TypeScript library (zero runtime dependencies) for validation, creation, and extraction of IBAN, BBAN, and BIC/SWIFT numbers. The library is published as an ES module with full TypeScript support and is dual-licensed under MIT or MPL-2.0.
+IBANTools is a TypeScript library (zero runtime dependencies) for validation, creation, and extraction of IBAN, BBAN, and BIC/SWIFT numbers. The library is published as an ES module with full TypeScript support and is licensed under MIT.
 
 ## Development Commands
 

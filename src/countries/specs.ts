@@ -1,10 +1,3 @@
-/*!
- * @license
- * Licensed under the Mozilla Public License, Version 2.0 or the MIT license,
- * at your option.
- * SPDX-License-Identifier: MIT or MPL/2.0
- */
-
 import {
   checkBelgianBBAN,
   checkCroatianBBAN,

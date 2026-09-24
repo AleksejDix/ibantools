@@ -24,12 +24,12 @@
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   },
-  "homepage": "https://github.com/Simplify/ibantools",
+  "homepage": "https://github.com/AleksejDix/ibantools",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Simplify/ibantools.git"
+    "url": "https://github.com/AleksejDix/ibantools.git"
   },
-  "bugs": "https://github.com/Simplify/ibantools/issues",
+  "bugs": "https://github.com/AleksejDix/ibantools/issues",
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json && vite build",
     "test": "vitest run",
@@ -46,13 +46,7 @@
     "name": "Aleksej Dix",
     "email": "privat@aleksejdix.com"
   },
-  "contributors": [
-    {
-      "name": "Saša Jovanić",
-      "url": "https://www.simplify.ba/"
-    }
-  ],
-  "license": "MIT or MPL-2.0",
+  "license": "MIT",
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.7",
     "oxfmt": "^0.52.0",
