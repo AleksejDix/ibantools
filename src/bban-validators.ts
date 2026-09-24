@@ -80,16 +80,9 @@ export const checkCroatianBBAN = (bban: string): boolean => {
 const CZECH_PREFIX_WEIGHTS = [10, 5, 8, 4, 2, 1] as const;
 const CZECH_SUFFIX_WEIGHTS = [6, 3, 7, 9, 10, 5, 8, 4, 2, 1] as const;
 
-export const checkCzechAndSlovakBBAN = (bban: string): boolean => {
-  const controlPrefix = parseInt(bban.charAt(9), 10);
-  const controlSuffix = parseInt(bban.charAt(19), 10);
-  const prefixRemainder = weightedSum(bban.substring(4, 9), CZECH_PREFIX_WEIGHTS) % 11;
-  if (controlPrefix !== mod11CheckDigit(prefixRemainder)) {
-    return false;
-  }
-  const suffixRemainder = weightedSum(bban.substring(10, 19), CZECH_SUFFIX_WEIGHTS) % 11;
-  return controlSuffix === mod11CheckDigit(suffixRemainder);
-};
+export const checkCzechAndSlovakBBAN = (bban: string): boolean =>
+  weightedSum(bban.substring(4, 10), CZECH_PREFIX_WEIGHTS) % 11 === 0 &&
+  weightedSum(bban.substring(10, 20), CZECH_SUFFIX_WEIGHTS) % 11 === 0;
 
 const ESTONIA_WEIGHTS = [7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7] as const;
 

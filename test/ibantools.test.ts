@@ -625,6 +625,15 @@ describe('IBANTools', () => {
   });
 
   describe('When calling isValidBBAN()', () => {
+    it('with CZ BBAN whose prefix check digit is 1 for remainder 1 should return false', () => {
+      expect(iban.isValidBBAN('08000000610000000000', 'CZ')).toBe(false);
+    });
+    it('with CZ BBAN whose account check digit is 1 for remainder 1 should return false', () => {
+      expect(iban.isValidBBAN('08000000000000000601', 'CZ')).toBe(false);
+    });
+    it('with SK BBAN whose prefix check digit is 1 for remainder 1 should return false', () => {
+      expect(iban.isValidBBAN('12000000610000000000', 'SK')).toBe(false);
+    });
     it('with valid BBAN and valid country code should return true', () => {
       expect(iban.isValidBBAN('ABNA0417164300', 'NL')).toBe(true);
     });
