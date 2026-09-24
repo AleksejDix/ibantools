@@ -2,10 +2,6 @@
 
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
-[![npm version](https://badge.fury.io/js/ibantools.svg)](https://badge.fury.io/js/ibantools)
-[![NPM downloads](https://img.shields.io/npm/dw/ibantools)](https://www.npmjs.com/package/ibantools)
-![Dependents (via libraries.io)](https://img.shields.io/librariesio/dependents/npm/ibantools)
-
 [![CI](https://github.com/AleksejDix/ibantools/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/AleksejDix/ibantools/actions/workflows/ci.yml)
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/AleksejDix/ibantools)
@@ -34,12 +30,12 @@ For more information about BIC/SWIFT see [this wikipedia page](https://en.wikipe
 ## Installation
 
 ```bash
-npm install ibantools
+npm install github:AleksejDix/ibantools
 ```
 
 ## Usage
 
-See [full documentation](http://simplify.github.io/ibantools) with examples on Github pages.
+See the [full documentation](https://dix.consulting/ibantools) with examples on GitHub Pages.
 
 ### ES Modules (Recommended)
 
@@ -96,5 +92,7 @@ This work is licensed under MIT.
 
 `SPDX-License-Identifier: MIT`
 
-Inspired by [ibantools](https://github.com/Simplify/ibantools) by Saša Jovanić.
+## Credits
+
+This project started as a fork of [ibantools](https://github.com/Simplify/ibantools), created and maintained by [Saša Jovanić](https://github.com/Simplify). Many thanks to Saša Jovanić and everyone who contributed to the original project.
 
