@@ -148,6 +148,10 @@ Before submitting PRs:
 3. Do not include changes to `dist/` directory (generated during publish)
 4. Update tests in `test/ibantools.test.ts` for any functionality changes
 
+## Lockfile
+
+CI installs with `npm ci` from the public registry. Locally, npm may use a private mirror: with npm's default `replace-registry-host=npmjs`, lockfile URLs for `registry.npmjs.org` are fetched through the configured registry. `package-lock.json` must therefore only contain `https://registry.npmjs.org/` URLs, and CI fails otherwise. If a local install writes mirror URLs into the lockfile, replace them with `https://registry.npmjs.org/` before committing.
+
 ## Releasing
 
 Publishing is automated by `.github/workflows/release.yml`, triggered by pushing a `v*` tag that matches the `package.json` version. See `CONTRIBUTING.md` for the steps. Never run `npm publish` manually.
