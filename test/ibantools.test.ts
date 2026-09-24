@@ -991,6 +991,12 @@ describe('IBANTools', () => {
     });
   });
 
+  describe('When calling friendlyFormatIBAN() with replacement pattern as separator', () => {
+    it('should insert the separator literally', () => {
+      expect(iban.friendlyFormatIBAN('NL91ABNA0417164300', '$&')).toBe('NL91$&ABNA$&0417$&1643$&00');
+    });
+  });
+
   describe('When calling friendlyFormatIBAN() with invalid argument', () => {
     it('returns null when undefined is provided', () => {
       expect(iban.friendlyFormatIBAN(undefined)).toBeNull();
