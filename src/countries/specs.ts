@@ -451,6 +451,7 @@ export const countrySpecs: CountryMapInternal = {
     SEPA: true,
     branch_indentifier: '2-3',
     bank_identifier: '0-1',
+    account_indentifier: '8-25',
   },
   IT: {
     chars: 27,

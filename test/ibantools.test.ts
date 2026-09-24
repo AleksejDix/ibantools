@@ -942,6 +942,15 @@ describe('IBANTools', () => {
     });
   });
 
+  describe('When calling extractIBAN() with Icelandic IBAN', () => {
+    it('should extract bank, branch and account', () => {
+      const ext = iban.extractIBAN(iban.composeIBAN({ countryCode: 'IS', bban: '0159260076545510730339' }) ?? '');
+      expect(ext.bankIdentifier).toBe('01');
+      expect(ext.branchIdentifier).toBe('59');
+      expect(ext.accountNumber).toBe('260076545510730339');
+    });
+  });
+
   describe('Country spec account positions', () => {
     // RU is excluded: its registry "branch" is the first part of the 20-digit account number.
     const codes = Object.keys(iban.countrySpecs).filter(
