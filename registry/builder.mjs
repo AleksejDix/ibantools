@@ -193,7 +193,7 @@ console.log('IBAN Registry Builder');
 console.log('');
 
 const specs = parseRegistry();
-console.log(`Parsed ${specs.length} countries from iban-registry-v101.txt`);
+console.log(`Parsed ${specs.length} countries`);
 
 const output = generateOutput(specs);
 fs.writeFileSync(outputPath, output);

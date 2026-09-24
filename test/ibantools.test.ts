@@ -319,6 +319,9 @@ describe('IBANTools', () => {
     it('does not allows QR-IBAN when requested to do so', () => {
       expect(iban.isValidIBAN('CH4431999123000889012', { allowQRIBAN: false })).toBe(false);
     });
+    it('with valid BR IBAN with alphanumeric bank code should return true', () => {
+      expect(iban.isValidIBAN('BR6699999A03000010009795493C1')).toBe(true);
+    });
     it('with valid FK IBAN should return true', () => {
       expect(iban.isValidIBAN('FK88SC123456789012')).toBe(true);
     });
@@ -560,6 +563,16 @@ describe('IBANTools', () => {
     });
   });
 
+  describe('When calling getCountrySpecifications()', () => {
+    const specs = iban.getCountrySpecifications();
+    it.each(['BI', 'DJ', 'FK'])('%s should be in IBAN registry', (code) => {
+      expect(specs[code]?.IBANRegistry).toBe(true);
+    });
+    it.each(['EG', 'VA'])('%s BBAN regexp should reject extra characters', (code) => {
+      expect(new RegExp(specs[code]?.bban_regexp ?? '', 'u').test('0'.repeat(30))).toBe(false);
+    });
+  });
+
   describe('When calling isSEPACountry()', () => {
     it('with valid country code NL should return true', () => {
       expect(iban.isSEPACountry('NL')).toBe(true);
@@ -705,6 +718,12 @@ describe('IBANTools', () => {
     });
     it('with BBAN passing country checksum should return IBAN', () => {
       expect(iban.composeIBAN({ countryCode: 'NO', bban: '86011117947' })).toBe('NO9386011117947');
+    });
+    it('with BY BBAN with digit in bank code should return IBAN', () => {
+      expect(iban.composeIBAN({ countryCode: 'BY', bban: '1BRB3600900000002Z00AB00' })).not.toBeNull();
+    });
+    it('with IE BBAN with digit in bank code should return null', () => {
+      expect(iban.composeIBAN({ countryCode: 'IE', bban: 'AIB193115212345678' })).toBeNull();
     });
     it('with valid country code and no BBAN should return null', () => {
       expect(iban.composeIBAN({ countryCode: 'NL', bban: null })).toBeNull();
