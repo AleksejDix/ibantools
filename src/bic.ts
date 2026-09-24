@@ -5,7 +5,7 @@
 'use strict';
 
 import { type ExtractBICResult, type ValidateBICResult, ValidationErrorsBIC } from './core/types';
-import { countrySpecs } from './countries/specs';
+import { COUNTRY_CODES } from './countries/codes';
 
 const BIC_REGEX = /^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$/u;
 
@@ -30,8 +30,7 @@ export function isValidBIC(bic: string | null | undefined): boolean {
   if (!bic) {
     return false;
   }
-  const spec = countrySpecs[bic.toUpperCase().slice(4, 6)];
-  return BIC_REGEX.test(bic) && spec !== undefined;
+  return BIC_REGEX.test(bic) && COUNTRY_CODES.has(bic.toUpperCase().slice(4, 6));
 }
 
 /**
@@ -50,7 +49,7 @@ export function validateBIC(bic?: string | null): ValidateBICResult {
     if (!BIC_REGEX.test(bic)) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsBIC.WrongBICFormat);
-    } else if (countrySpecs[bic.toUpperCase().slice(4, 6)] === undefined) {
+    } else if (!COUNTRY_CODES.has(bic.toUpperCase().slice(4, 6))) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsBIC.NoBICCountry);
     }
