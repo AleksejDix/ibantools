@@ -936,6 +936,22 @@ describe('IBANTools', () => {
     });
   });
 
+  describe('Country spec account positions', () => {
+    // RU is excluded: its registry "branch" is the first part of the 20-digit account number.
+    const codes = Object.keys(iban.countrySpecs).filter(
+      (code) => code !== 'RU' && iban.countrySpecs[code]?.account_indentifier !== undefined,
+    );
+    it.each(codes)('%s account range should follow bank and branch and fit the IBAN', (code) => {
+      const spec = iban.countrySpecs[code];
+      const [start, end] = spec.account_indentifier!.split('-').map(Number);
+      const identifierEnds = [spec.bank_identifier, spec.branch_indentifier].map((range) =>
+        range === undefined ? 3 : Number(range.split('-')[1]) + 4,
+      );
+      expect(start).toBeGreaterThan(Math.max(...identifierEnds));
+      expect(end).toBeLessThanOrEqual(spec.chars!);
+    });
+  });
+
   describe('When calling extractIBAN() with dash separated IBAN', () => {
     const ext = iban.extractIBAN('NL91-ABNA-0417-1643-00');
 
