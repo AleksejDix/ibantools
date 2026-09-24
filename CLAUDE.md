@@ -21,13 +21,16 @@ npm run test:watch
 # Generate coverage report (must maintain 100% coverage)
 npm run coverage
 
+# Type-check source and tests (strict settings in tsconfig.json)
+npm run typecheck
+
 # Lint code
 npm run lint
 
 # Generate API documentation
 npm run docs
 
-# Run full validation suite (tests + lint + docs)
+# Run full validation suite (typecheck + tests + lint + format + docs)
 npm run all
 ```
 

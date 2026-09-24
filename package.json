@@ -35,12 +35,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
-    "lint": "oxlint --type-aware src/ test/",
+    "lint": "oxlint --type-aware --tsconfig tsconfig.test.json src/ test/",
+    "typecheck": "tsc -p tsconfig.test.json",
     "format": "oxfmt src/ test/",
     "format:check": "oxfmt --check src/ test/",
     "prepare": "npm run build",
     "docs": "typedoc src/index.ts",
-    "all": "npm run test && npm run lint && npm run format:check && npm run docs"
+    "all": "npm run typecheck && npm run test && npm run lint && npm run format:check && npm run docs"
   },
   "author": {
     "name": "Aleksej Dix",
