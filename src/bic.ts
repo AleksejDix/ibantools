@@ -58,13 +58,12 @@ export function isValidBIC(bic: string | null | undefined): boolean {
 export function validateBIC(bic?: string | null): ValidateBICResult {
   const result = { errorCodes: [], valid: true } as ValidateBICResult;
   if (bic !== undefined && bic !== null && bic !== '') {
-    const spec = countrySpecs[bic.toUpperCase().slice(4, 6)];
-    if (spec === undefined) {
-      result.valid = false;
-      result.errorCodes.push(ValidationErrorsBIC.NoBICCountry);
-    } else if (!BIC_REGEX.test(bic)) {
+    if (!BIC_REGEX.test(bic)) {
       result.valid = false;
       result.errorCodes.push(ValidationErrorsBIC.WrongBICFormat);
+    } else if (countrySpecs[bic.toUpperCase().slice(4, 6)] === undefined) {
+      result.valid = false;
+      result.errorCodes.push(ValidationErrorsBIC.NoBICCountry);
     }
   } else {
     result.valid = false;

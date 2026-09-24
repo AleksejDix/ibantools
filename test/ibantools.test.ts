@@ -548,6 +548,13 @@ describe('IBANTools', () => {
       });
     });
 
+    it('with too short BIC should return false with format code', () => {
+      expect(iban.validateBIC('AB')).toEqual({
+        valid: false,
+        errorCodes: [iban.ValidationErrorsBIC.WrongBICFormat],
+      });
+    });
+
     it('with valid BIC should return true', () => {
       expect(iban.validateBIC('ABNANL2A')).toEqual({ valid: true, errorCodes: [] });
     });
