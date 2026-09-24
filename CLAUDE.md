@@ -148,6 +148,10 @@ Before submitting PRs:
 3. Do not include changes to `dist/` directory (generated during publish)
 4. Update tests in `test/ibantools.test.ts` for any functionality changes
 
+## Releasing
+
+Publishing is automated by `.github/workflows/release.yml`, triggered by pushing a `v*` tag that matches the `package.json` version. See `CONTRIBUTING.md` for the steps. Never run `npm publish` manually.
+
 ## Git Commit Guidelines
 
 - **Keep commits concise** - Single line subject, no multi-paragraph explanations
