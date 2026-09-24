@@ -6,7 +6,7 @@ Parses SWIFT IBAN Registry TXT file to generate `script/iban_spec.js`.
 
 SWIFT provides the IBAN Registry in TXT format:
 - **URL:** https://www.swift.com/swift-resource/11971/download
-- **Current version:** v101 (December 2025)
+- **Current version:** v103 (September 2026)
 - **Countries:** 89
 
 ## Usage
@@ -23,7 +23,7 @@ node registry/builder.mjs --output /path/to/output.js
 
 ```
 registry/
-├── iban-registry-v101.txt  # SWIFT TXT source (89 countries)
+├── iban-registry-v103.txt  # SWIFT TXT source (89 countries)
 ├── builder.mjs             # Parser script
 └── README.md               # This file
 
