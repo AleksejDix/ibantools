@@ -12,7 +12,9 @@ export { ValidationErrorsBIC, ValidationErrorsIBAN } from './core/types';
 export type {
   ComposeIBANParams,
   CountryMap,
+  CountryMapInternal,
   CountrySpec,
+  CountrySpecInternal,
   ExtractBICResult,
   ExtractIBANResult,
   ValidateBICResult,
