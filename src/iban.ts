@@ -133,7 +133,7 @@ export function validateIBAN(
  * ibanita.isQRIBAN("NL92ABNA0517164300");
  * ```
  */
-export function isQRIBAN(iban: string): boolean {
+export function isQRIBAN(iban?: string | null): boolean {
   if (iban === undefined || iban === null) {
     return false;
   }
@@ -183,10 +183,10 @@ export function composeIBAN(params: Readonly<ComposeIBANParams>): string | null 
  * ibanita.extractIBAN("NL91 ABNA 0417 1643 00");
  * ```
  */
-export function extractIBAN(iban: string): ExtractIBANResult {
+export function extractIBAN(iban?: string | null): ExtractIBANResult {
   const eFormatIBAN: string | null = electronicFormatIBAN(iban);
   const result: ExtractIBANResult = {
-    iban: eFormatIBAN ?? iban,
+    iban: eFormatIBAN ?? '',
     valid: false,
   };
   if (eFormatIBAN !== null && isValidIBAN(eFormatIBAN)) {

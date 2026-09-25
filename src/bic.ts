@@ -67,9 +67,9 @@ export function validateBIC(bic?: string | null): ValidateBICResult {
  * ibanita.extractBIC("ABNANL2A");
  * ```
  */
-export function extractBIC(inputBic: string): ExtractBICResult {
+export function extractBIC(inputBic?: string | null): ExtractBICResult {
   const result = {} as ExtractBICResult;
-  const bic = inputBic.toUpperCase();
+  const bic = (inputBic ?? '').toUpperCase();
   if (isValidBIC(bic)) {
     result.bankCode = bic.slice(0, 4);
     result.countryCode = bic.slice(4, 6);

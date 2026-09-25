@@ -574,7 +574,7 @@ describe('IBANTools', () => {
       expect(iban.isSEPACountry('NL')).toBe(true);
     });
     it('with undefined country code should return false', () => {
-      expect(iban.isSEPACountry(undefined as unknown as string)).toBe(false);
+      expect(iban.isSEPACountry(undefined)).toBe(false);
     });
     it('with valid country code PK return false', () => {
       expect(iban.isSEPACountry('PK')).toBe(false);
@@ -1086,9 +1086,18 @@ describe('IBANTools', () => {
     });
   });
 
+  describe('When calling extraction functions with null or undefined', () => {
+    it.each([null, undefined])('extractBIC(%s) should return an invalid result', (input) => {
+      expect(iban.extractBIC(input).valid).toBe(false);
+    });
+    it.each([null, undefined])('extractIBAN(%s) should return an invalid result with an empty iban', (input) => {
+      expect(iban.extractIBAN(input)).toEqual({ iban: '', valid: false });
+    });
+  });
+
   describe('isQRIBAN', () => {
     it('should return false for null', () => {
-      expect(iban.isQRIBAN(null as unknown as string)).toBe(false);
+      expect(iban.isQRIBAN(null)).toBe(false);
     });
     it('should return true', () => {
       expect(iban.isQRIBAN('CH4431999123000889012')).toBe(true);

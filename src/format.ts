@@ -7,7 +7,7 @@
  * electronicFormatIBAN("NL91 ABNA 0417 1643 00");
  * ```
  */
-export function electronicFormatIBAN(iban?: string): string | null {
+export function electronicFormatIBAN(iban?: string | null): string | null {
   if (typeof iban !== 'string') {
     return null;
   }

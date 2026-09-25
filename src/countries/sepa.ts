@@ -13,7 +13,7 @@ import { ibanSpecs } from './specs';
  * ibanita.isSEPACountry("PK");
  * ```
  */
-export function isSEPACountry(countryCode: string): boolean {
+export function isSEPACountry(countryCode?: string | null): boolean {
   if (countryCode !== undefined && countryCode !== null) {
     const spec = ibanSpecs[countryCode];
     if (spec !== undefined) {
