@@ -1,72 +1,36 @@
-# IBAN Registry Parser
+# SWIFT IBAN Registry
 
-Parses SWIFT IBAN Registry TXT file to generate `script/iban_spec.js`.
+This folder holds the SWIFT IBAN Registry and the builder that turns it into `src/countries/registry.ts`.
 
 ## Source
 
-SWIFT provides the IBAN Registry in TXT format:
 - **URL:** https://www.swift.com/swift-resource/11971/download
 - **Current version:** v103 (September 2026)
 - **Countries:** 89
 
-## Usage
+## How the country data is built
 
-```bash
-# Generate iban_spec.js from TXT source
-node registry/builder.mjs
+- `src/countries/registry.ts` is **generated** from the newest `iban-registry-vXXX.txt` in this folder. It holds what the registry defines: IBAN length, BBAN pattern, SEPA and registry flags, and bank and branch positions. Never edit it by hand.
+- `src/countries/specs.ts` merges hand-maintained **overrides** over it: national checksum validators, account positions, countries and territories outside the registry, and deliberate deviations (FR branch, SI bank and branch).
+- CI regenerates `registry.ts` and fails if it differs from the committed file.
+- `test/registry.test.ts` checks every country against the newest registry file.
 
-# Custom output path
-node registry/builder.mjs --output /path/to/output.js
-```
+## Updating to a new registry release
 
-## Files
+1. Download the TXT file from https://www.swift.com/swift-resource/11971/download.
+2. Save it as `registry/iban-registry-vXXX.txt`, with the release number.
+3. Run `npm run registry` to regenerate `src/countries/registry.ts`. The builder picks the newest file.
+4. Run `npm test`. If an override in `specs.ts` conflicts with the new release, the registry test reports it.
+5. Update the version above.
 
-```
-registry/
-├── iban-registry-v103.txt  # SWIFT TXT source (89 countries)
-├── builder.mjs             # Parser script
-└── README.md               # This file
+## TXT file format
 
-script/
-└── iban_spec.js            # Generated output
-```
+The SWIFT TXT file is tab-separated, with one row per data field and one column per country. The builder reads:
 
-## Updating
-
-When SWIFT releases a new registry version:
-
-1. Download TXT from https://www.swift.com/swift-resource/11971/download
-2. Save as `registry/iban-registry-vXXX.txt` (e.g., `iban-registry-v102.txt`)
-3. Run `node registry/builder.mjs` (auto-detects latest version)
-4. Verify output with `npm test`
-
-## Generated Output
-
-The parser generates `script/iban_spec.js` with:
-
-| Field | Description |
-|-------|-------------|
-| `chars` | IBAN length |
-| `bban_regexp` | Regex derived from BBAN structure |
-| `IBANRegistry` | Always `true` |
-| `SEPA` | SEPA membership status |
-| `bank_identifier` | Bank ID position (0-based) |
-| `branch_indentifier` | Branch ID position (0-based, if applicable) |
-
-## TXT File Format
-
-The SWIFT TXT file is tab-separated with rows for each data field and columns for each country. Key rows parsed:
-
-- `Name of country`
 - `IBAN prefix country code (ISO 3166)`
 - `SEPA country`
 - `IBAN length`
-- `BBAN structure`
-- `Bank identifier position within the BBAN`
-- `Branch identifier position within the BBAN`
-- `IBAN electronic format example`
-- `Domestic account number example`
+- `BBAN structure`, converted to a pattern with adjacent fields of the same type merged
+- `Bank identifier position within the BBAN` and `Branch identifier position within the BBAN`, converted to 0-based positions
 
-### Multi-line Handling
-
-Some rows contain quoted values that span multiple lines. The parser handles this by joining continuation lines that start with `"\t`.
+Some rows contain quoted values that span several lines. The builder joins continuation lines that start with `"\t`.

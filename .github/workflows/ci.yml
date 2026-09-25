@@ -31,6 +31,10 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
       - run: npm ci
+      - name: Check generated registry data is up to date
+        run: |
+          npm run registry
+          git diff --exit-code src/countries/registry.ts
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
