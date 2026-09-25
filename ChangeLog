@@ -1,3 +1,20 @@
+2026-09-25  Aleksej Dix
+	* Renamed the package to ibanita. See MIGRATION.md for all changes from ibantools 4.x
+	* Updated country specifications to SWIFT IBAN Registry release 103, and aligned all formats with the registry
+	* Added tests that check every country against the latest registry file
+	* Fixed Czech and Slovak check digit validation
+	* Fixed extractIBAN account numbers for 30 countries and bank identifiers for 13 countries
+	* composeIBAN returns null when the BBAN fails its national checksum
+	* validateIBAN no longer reports a national checksum error for malformed input
+	* validateBIC reports a format error before a country error
+	* friendlyFormatIBAN inserts the separator literally
+	* extractBIC and extractIBAN handle null and undefined
+	* BIC functions no longer bundle the IBAN country data (2.8 kB to 0.6 kB gzipped)
+	* Upgraded to TypeScript 7 with the strictest compiler options, and type-checked tests
+	* Replaced TypeDoc with deno doc, documented every public type, and published docs at https://dix.consulting/ibantools
+	* Added CI, CodeQL and a tag-triggered npm release workflow
+	* Licensed under MIT only
+
 2026-05-26  Aleksej Dix
 	* Updated all dependencies to latest (oxlint 1.67, vitest 4.1.7, typedoc 0.28.19)
 	* Upgraded to TypeScript 6.0.3 and Vite 8.0.14 (major version bumps)

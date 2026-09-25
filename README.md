@@ -92,6 +92,10 @@ This work is licensed under MIT.
 
 `SPDX-License-Identifier: MIT`
 
+## Migrating from ibantools
+
+ibanita 5 changes some results and types compared to ibantools 4.x. See the [migration guide](MIGRATION.md).
+
 ## Credits
 
 This project started as a fork of [ibantools](https://github.com/Simplify/ibantools), created and maintained by [Saša Jovanić](https://github.com/Simplify). Many thanks to Saša Jovanić and everyone who contributed to the original project.
