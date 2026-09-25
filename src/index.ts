@@ -1,11 +1,9 @@
 /**
  * Validation, extraction and creation of IBAN, BBAN, BIC/SWIFT numbers plus some other helpful stuff
- * @package Documentation
  * @author Aleksej Dix
  * @module ibantools
  * @version 4.5.1
  * @license MIT
- * @preferred
  */
 'use strict';
 
