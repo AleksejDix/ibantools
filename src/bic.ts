@@ -14,16 +14,16 @@ const BIC_REGEX = /^[a-zA-Z]{6}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?$/u;
  *
  * ```
  * // returns true
- * ibantools.isValidBIC("ABNANL2A");
+ * ibanita.isValidBIC("ABNANL2A");
  *
  * // returns true
- * ibantools.isValidBIC("NEDSZAJJXXX");
+ * ibanita.isValidBIC("NEDSZAJJXXX");
  *
  * // returns false
- * ibantools.isValidBIC("ABN4NL2A");
+ * ibanita.isValidBIC("ABN4NL2A");
  *
  * // returns false
- * ibantools.isValidBIC("ABNA NL 2A");
+ * ibanita.isValidBIC("ABNA NL 2A");
  * ```
  */
 export function isValidBIC(bic: string | null | undefined): boolean {
@@ -40,7 +40,7 @@ export function isValidBIC(bic: string | null | undefined): boolean {
  * validateBIC
  * ```
  * // returns {errorCodes: [], valid: true}
- * ibantools.validateBIC("NEDSZAJJXXX");
+ * ibanita.validateBIC("NEDSZAJJXXX");
  * ```
  */
 export function validateBIC(bic?: string | null): ValidateBICResult {
@@ -64,7 +64,7 @@ export function validateBIC(bic?: string | null): ValidateBICResult {
  * extractBIC
  * ```
  * // returns {bankCode: "ABNA", countryCode: "NL", locationCode: "2A", branchCode: null, testBIC: false, valid: true}
- * ibantools.extractBIC("ABNANL2A");
+ * ibanita.extractBIC("ABNANL2A");
  * ```
  */
 export function extractBIC(inputBic: string): ExtractBICResult {

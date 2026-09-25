@@ -24,19 +24,19 @@ const QRIBAN_REGEX = /^3[0-1][0-9]{3}$/u;
  * Validate IBAN
  * ```
  * // returns true
- * ibantools.isValidIBAN("NL91ABNA0417164300");
+ * ibanita.isValidIBAN("NL91ABNA0417164300");
  * ```
  * ```
  * // returns false
- * ibantools.isValidIBAN("NL92ABNA0517164300");
+ * ibanita.isValidIBAN("NL92ABNA0517164300");
  * ```
  * ```
  * // returns true
- * ibantools.isValidIBAN('CH4431999123000889012');
+ * ibanita.isValidIBAN('CH4431999123000889012');
  * ```
  * ```
  * // returns false
- * ibantools.isValidIBAN('CH4431999123000889012', { allowQRIBAN: false });
+ * ibanita.isValidIBAN('CH4431999123000889012', { allowQRIBAN: false });
  * ```
  */
 export function isValidIBAN(
@@ -67,16 +67,16 @@ export function isValidIBAN(
  * validateIBAN
  * ```
  * // returns {errorCodes: [], valid: true}
- * ibantools.validateIBAN("NL91ABNA0417164300");
+ * ibanita.validateIBAN("NL91ABNA0417164300");
  * ```
  * ```
  * ```
  * // returns {errorCodes: [], valid: true}
- * ibantools.validateIBAN('CH4431999123000889012');
+ * ibanita.validateIBAN('CH4431999123000889012');
  * ```
  * ```
  * // returns {errorCodes: [7], valid: false}
- * ibantools.validateIBAN('CH4431999123000889012', { allowQRIBAN: false });
+ * ibanita.validateIBAN('CH4431999123000889012', { allowQRIBAN: false });
  * ```
  */
 export function validateIBAN(
@@ -126,11 +126,11 @@ export function validateIBAN(
  * Check if IBAN is QR-IBAN
  * ```
  * // returns true
- * ibantools.isQRIBAN("CH4431999123000889012");
+ * ibanita.isQRIBAN("CH4431999123000889012");
  * ```
  * ```
  * // returns false
- * ibantools.isQRIBAN("NL92ABNA0517164300");
+ * ibanita.isQRIBAN("NL92ABNA0517164300");
  * ```
  */
 export function isQRIBAN(iban: string): boolean {
@@ -150,7 +150,7 @@ export function isQRIBAN(iban: string): boolean {
  *
  * ```
  * // returns NL91ABNA0417164300
- * ibantools.composeIBAN({ countryCode: "NL", bban: "ABNA0417164300" });
+ * ibanita.composeIBAN({ countryCode: "NL", bban: "ABNA0417164300" });
  * ```
  */
 export function composeIBAN(params: Readonly<ComposeIBANParams>): string | null {
@@ -180,7 +180,7 @@ export function composeIBAN(params: Readonly<ComposeIBANParams>): string | null 
  * extractIBAN
  * ```
  * // returns {iban: "NL91ABNA0417164300", bban: "ABNA0417164300", countryCode: "NL", valid: true, accountNumber: '0417164300', bankIdentifier: 'ABNA'}
- * ibantools.extractIBAN("NL91 ABNA 0417 1643 00");
+ * ibanita.extractIBAN("NL91 ABNA 0417 1643 00");
  * ```
  */
 export function extractIBAN(iban: string): ExtractIBANResult {
