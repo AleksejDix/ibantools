@@ -64,7 +64,8 @@ src/
 │   └── checksum.ts          # Internal utilities (mod9710, checkFormatBBAN, weightedSum, etc.)
 └── countries/
     ├── codes.ts             # COUNTRY_CODES: all 250 country codes (used by BIC functions)
-    ├── specs.ts             # ibanSpecs: specifications of the countries that use IBAN
+    ├── registry.ts          # registrySpecs: generated from the SWIFT IBAN Registry (do not edit)
+    ├── specs.ts             # ibanSpecs: registrySpecs merged with hand-maintained overrides
     ├── all.ts               # countrySpecs: all countries, built from codes.ts and specs.ts
     └── sepa.ts              # Country utilities (isSEPACountry, getCountrySpecifications, setCountryBBANValidation)
 ```
@@ -128,13 +129,7 @@ External packages can add custom BBAN validation via `setCountryBBANValidation(c
 
 ## IBAN Registry Updates
 
-The `countrySpecs` are derived from the SWIFT IBAN Registry. To update when a new registry version is released:
-
-1. Download TXT file from https://www.swift.com/swift-resource/11971/download
-2. Save as `registry/iban-registry-vXXX.txt` (where XXX is version number)
-3. Run `npm test`. `test/registry.test.ts` reads the newest registry file and reports every country whose format, length, flags or identifier positions no longer match
-4. Run `node registry/builder.mjs` to regenerate `script/iban_spec.js`, and copy the changed values into `src/countries/specs.ts` by hand. The builder doesn't update the source file, and it doesn't generate `account_indentifier`
-5. Update the version number in `registry/README.md`
+`src/countries/registry.ts` is generated from the newest SWIFT IBAN Registry file in `registry/` by `npm run registry`; never edit it by hand. `src/countries/specs.ts` merges hand-maintained overrides over it (validators, account positions, non-registry countries, FR/SI deviations). CI fails if the generated file is out of date. See `registry/README.md` for the update steps.
 
 ## Build Configuration
 
