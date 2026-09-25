@@ -36,7 +36,8 @@ npm run all
 
 ## Testing
 
-- Test file: `test/ibantools.test.ts`
+- `test/ibantools.test.ts`: unit tests for the public API
+- `test/registry.test.ts`: checks every country against the latest `registry/iban-registry-vXXX.txt` (formats, lengths, flags, example IBANs, identifier positions)
 - **Coverage requirement: 100%** - All pull requests must maintain 100% test coverage
 - Run `npm run coverage` to verify coverage before committing
 
@@ -52,14 +53,16 @@ src/
 ├── iban.ts                  # IBAN functions (isValidIBAN, validateIBAN, composeIBAN, extractIBAN, isQRIBAN)
 ├── bic.ts                   # BIC functions (isValidBIC, validateBIC, extractBIC)
 ├── bban.ts                  # BBAN functions (isValidBBAN)
-├── bban-validators.ts       # Country-specific BBAN validators (14 functions)
+├── bban-validators.ts       # Country-specific BBAN checksum validators
 ├── format.ts                # Format utilities (electronicFormatIBAN, friendlyFormatIBAN)
 ├── core/
 │   ├── constants.ts         # MOD_97, MOD_97_REMAINDER
 │   ├── types.ts             # All interfaces, types, enums
 │   └── checksum.ts          # Internal utilities (mod9710, checkFormatBBAN, weightedSum, etc.)
 └── countries/
-    ├── specs.ts             # Country specifications (249 countries)
+    ├── codes.ts             # COUNTRY_CODES: all 250 country codes (used by BIC functions)
+    ├── specs.ts             # ibanSpecs: specifications of the countries that use IBAN
+    ├── all.ts               # countrySpecs: all countries, built from codes.ts and specs.ts
     └── sepa.ts              # Country utilities (isSEPACountry, getCountrySpecifications, setCountryBBANValidation)
 ```
 
@@ -77,7 +80,13 @@ All public functions are re-exported from `src/index.ts`:
 
 ### Country Specifications (`countrySpecs`)
 
-Located in `src/countries/specs.ts`, the `countrySpecs` object contains validation rules for every country (including non-IBAN countries with empty specs). Each spec includes:
+The data is split so bundlers only include what a function needs:
+
+- `ibanSpecs` (`src/countries/specs.ts`) holds the countries that use IBAN. IBAN, BBAN and SEPA functions read it.
+- `COUNTRY_CODES` (`src/countries/codes.ts`) lists all country codes. BIC functions read it. Every `ibanSpecs` country must be listed here, and a test checks this.
+- `countrySpecs` (`src/countries/all.ts`), the public export, has every country, with empty specs for countries without IBAN. It shares the spec objects with `ibanSpecs`, so `setCountryBBANValidation` affects validation.
+
+Each spec includes:
 
 - `chars`: IBAN length
 - `bban_regexp`: Regex pattern for BBAN validation
@@ -120,25 +129,31 @@ The `countrySpecs` are derived from the SWIFT IBAN Registry. To update when a ne
 
 1. Download TXT file from https://www.swift.com/swift-resource/11971/download
 2. Save as `registry/iban-registry-vXXX.txt` (where XXX is version number)
-3. Run `node registry/builder.mjs` to regenerate country specifications
-4. The builder script parses the tab-separated TXT file and generates proper TypeScript code
-5. **Important**: The generated output needs to be manually integrated into `src/countries/specs.ts` - the builder doesn't automatically update the source file
-6. Run `npm test` to verify all tests pass with updated specifications
-7. Update version number in `registry/README.md`
+3. Run `npm test`. `test/registry.test.ts` reads the newest registry file and reports every country whose format, length, flags or identifier positions no longer match
+4. Run `node registry/builder.mjs` to regenerate `script/iban_spec.js`, and copy the changed values into `src/countries/specs.ts` by hand. The builder doesn't update the source file, and it doesn't generate `account_indentifier`
+5. Update the version number in `registry/README.md`
 
 ## Build Configuration
 
-- **Build tool**: Vite with TypeScript
-- **Output**: ES modules only (no CommonJS)
+- **Build tool**: Vite 8, minified with Vite's built-in minifier
+- **Output**: ES modules only (no CommonJS), with `sideEffects: false`
 - **Features**:
   - `preserveModules: true` for tree-shaking support
   - Source maps enabled
-  - TypeScript declarations generated via `vite-plugin-dts`
-  - Rollup types bundled into single `.d.ts` file
+  - TypeScript declarations generated per module by `tsc -p tsconfig.build.json` (TypeScript 7)
+
+## TypeScript
+
+- `tsconfig.json` enables the strictest options, including `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noPropertyAccessFromIndexSignature` and `isolatedDeclarations`
+- `tsconfig.test.json` extends it to type-check the tests; `npm run typecheck` uses it
+
+## Documentation
+
+`npm run docs` generates the API documentation with `deno doc` (Deno is a dev dependency) into `docs/`. The Docs workflow deploys it to https://dix.consulting/ibantools on every push to master.
 
 ## Node Version
 
-Requires Node.js `^20.19.0 || >=22.12.0` (aligned with Vite 7 and Vitest 4 requirements).
+Requires Node.js `^20.19.0 || >=22.12.0` (aligned with Vite 8 and Vitest 4 requirements).
 
 Project includes `.node-version` and `.nvmrc` files set to Node 22 for consistency.
 
@@ -169,7 +184,7 @@ Publishing is automated by `.github/workflows/release.yml`, triggered by pushing
 
 Uses `oxlint` (Rust-based fast linter) with TypeScript awareness:
 ```bash
-oxlint --type-aware src/ test/
+oxlint --type-aware --tsconfig tsconfig.test.json src/ test/
 ```
 
-No configuration file needed - sensible defaults are used.
+Rules are configured in `.oxlintrc.json`. Formatting uses `oxfmt` (`npm run format`).
