@@ -40,7 +40,7 @@
     "format": "oxfmt src/ test/",
     "format:check": "oxfmt --check src/ test/",
     "prepare": "npm run build",
-    "docs": "typedoc src/index.ts",
+    "docs": "deno doc --html --name=ibantools --output=docs --sloppy-imports src/index.ts",
     "all": "npm run typecheck && npm run test && npm run lint && npm run format:check && npm run docs"
   },
   "author": {
@@ -51,10 +51,10 @@
   "devDependencies": {
     "@types/node": "^22.20.3",
     "@vitest/coverage-v8": "^4.1.7",
+    "deno": "2.9.6",
     "oxfmt": "^0.52.0",
     "oxlint": "^1.67.0",
     "oxlint-tsgolint": "^0.23.0",
-    "typedoc": "^0.28.19",
     "typescript": "^6.0.3",
     "vite": "^8.0.14",
     "vitest": "^4.1.7"
