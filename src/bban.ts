@@ -12,11 +12,11 @@ import { ibanSpecs } from './countries/specs';
  *
  * ```
  * // returns true
- * ibantools.isValidBBAN("ABNA0417164300", "NL");
+ * ibanita.isValidBBAN("ABNA0417164300", "NL");
  * ```
  * ```
  * // returns false
- * ibantools.isValidBBAN("A7NA0517164300", "NL");
+ * ibanita.isValidBBAN("A7NA0517164300", "NL");
  * ```
  */
 export function isValidBBAN(bban: string | null | undefined, countryCode: string | null | undefined): boolean {

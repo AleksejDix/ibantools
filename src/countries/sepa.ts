@@ -6,11 +6,11 @@ import { ibanSpecs } from './specs';
  * Validate if country code is from a SEPA country
  * ```
  * // returns true
- * ibantools.isSEPACountry("NL");
+ * ibanita.isSEPACountry("NL");
  * ```
  * ```
  * // returns false
- * ibantools.isSEPACountry("PK");
+ * ibanita.isSEPACountry("PK");
  * ```
  */
 export function isSEPACountry(countryCode: string): boolean {
@@ -30,7 +30,7 @@ export function isSEPACountry(countryCode: string): boolean {
  *
  * ```
  * // Get country specifications
- * const specs = ibantools.getCountrySpecifications();
+ * const specs = ibanita.getCountrySpecifications();
  * const nlSpec = specs['NL'];
  * console.log(nlSpec.chars); // 18
  * console.log(nlSpec.bban_regexp); // '^[A-Z]{4}[0-9]{10}$'

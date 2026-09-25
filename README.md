@@ -1,4 +1,4 @@
-# IBANTools
+# ibanita
 
 ![License](https://img.shields.io/badge/License-MIT-blue)
 
@@ -40,7 +40,7 @@ See the [full documentation](https://dix.consulting/ibantools) with examples on 
 ### ES Modules (Recommended)
 
 ```js
-import { isValidIBAN, validateIBAN, isValidBIC, electronicFormatIBAN } from 'ibantools';
+import { isValidIBAN, validateIBAN, isValidBIC, electronicFormatIBAN } from 'ibanita';
 
 const iban = electronicFormatIBAN('NL91 ABNA 0417 1643 00'); // 'NL91ABNA0517164300'
 isValidIBAN(iban); // true
@@ -58,7 +58,7 @@ isValidBIC('ABNANL2A'); // true
 Full TypeScript support with bundled type definitions:
 
 ```typescript
-import { isValidIBAN, validateIBAN, ValidationErrorsIBAN } from 'ibantools';
+import { isValidIBAN, validateIBAN, ValidationErrorsIBAN } from 'ibanita';
 
 const result = validateIBAN('NL91ABNA0417164300');
 if (!result.valid) {
@@ -73,7 +73,7 @@ Country specifications can be extended with national BBAN validations by calling
 For example, to fully syntactically check German IBAN, you can install [IBANTools-Germany](https://github.com/baumerdev/ibantools-germany):
 
 ```js
-import { setCountryBBANValidation } from 'ibantools';
+import { setCountryBBANValidation } from 'ibanita';
 import { isValidBBAN } from 'ibantools-germany';
 
 setCountryBBANValidation('DE', isValidBBAN);

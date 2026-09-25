@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-IBANTools is a TypeScript library (zero runtime dependencies) for validation, creation, and extraction of IBAN, BBAN, and BIC/SWIFT numbers. The library is published as an ES module with full TypeScript support and is licensed under MIT.
+ibanita is a TypeScript library (zero runtime dependencies) for validation, creation, and extraction of IBAN, BBAN, and BIC/SWIFT numbers. The library is published as an ES module with full TypeScript support and is licensed under MIT.
 
 ## Development Commands
 
@@ -39,7 +39,7 @@ npm run all
 
 ## Testing
 
-- `test/ibantools.test.ts`: unit tests for the public API
+- `test/ibanita.test.ts`: unit tests for the public API
 - `test/registry.test.ts`: checks every country against the latest `registry/iban-registry-vXXX.txt` (formats, lengths, flags, example IBANs, identifier positions)
 - **Coverage requirement: 100%** - All pull requests must maintain 100% test coverage
 - Run `npm run coverage` to verify coverage before committing
@@ -167,7 +167,7 @@ Before submitting PRs:
 1. Run `npm run all` to ensure tests, linting, and docs generation pass
 2. Verify 100% test coverage maintained (`npm run coverage`)
 3. Do not include changes to `dist/` directory (generated during publish)
-4. Update tests in `test/ibantools.test.ts` for any functionality changes
+4. Update tests in `test/ibanita.test.ts` for any functionality changes
 
 ## Lockfile
 
