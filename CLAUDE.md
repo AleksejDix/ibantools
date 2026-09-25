@@ -30,7 +30,10 @@ npm run lint
 # Generate API documentation
 npm run docs
 
-# Run full validation suite (typecheck + tests + lint + format + docs)
+# Check that every public export has a doc comment
+npm run docs:lint
+
+# Run full validation suite (typecheck + tests + lint + format + docs lint + docs)
 npm run all
 ```
 
